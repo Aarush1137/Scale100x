@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Search, Send, UserCheck, Bot, AlertTriangle, CheckCircle, MessageSquare, ChevronRight } from 'lucide-react';
+import { Search, Send, UserCheck, Bot, AlertTriangle, CheckCircle, MessageSquare, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { Button, Card, Badge, Input, Textarea } from '../../components/ui';
 import { showToast } from '../../components/ui';
@@ -167,7 +167,7 @@ export default function WhatsAppWorkspace() {
   return (
     <div className="flex h-[calc(100vh-57px)] overflow-hidden">
       {/* Left: Conversation List */}
-      <div className="w-72 flex-shrink-0 border-r border-[var(--border)] flex flex-col">
+      <div className={`flex-shrink-0 w-full md:w-72 border-r border-[var(--border)] flex flex-col ${selectedConvId ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-3 border-b border-[var(--border)] space-y-2">
           <div className="flex items-center gap-2">
             <h2 className="text-sm font-semibold text-[var(--text-primary)] flex-1">WhatsApp</h2>
@@ -194,7 +194,7 @@ export default function WhatsAppWorkspace() {
               className={`p-3 border-b border-[var(--border)]/50 cursor-pointer transition-colors ${selectedConvId === conv.id ? 'bg-[var(--accent-subtle)] border-l-2 border-l-[var(--accent)]' : 'hover:bg-[var(--bg-hover)]'}`}
             >
               <div className="flex items-start gap-2">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)] flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--accent)] flex-shrink-0">
                   {conv.leadName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -218,11 +218,14 @@ export default function WhatsAppWorkspace() {
 
       {/* Right: Conversation Thread */}
       {selectedConv ? (
-        <div className="flex-1 flex overflow-hidden">
+        <div className={`flex-1 flex overflow-hidden ${!selectedConvId ? 'hidden md:flex' : 'flex'}`}>
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Header */}
             <div className="flex items-center gap-3 p-3 border-b border-[var(--border)] flex-shrink-0">
-              <div className="w-9 h-9 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-sm font-bold text-[var(--text-primary)]">
+              <button onClick={() => setSelectedConvId(null)} className="md:hidden flex items-center gap-1 text-sm text-[var(--accent)] flex-shrink-0 mr-1">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <div className="w-9 h-9 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-sm font-bold text-[var(--accent)] flex-shrink-0">
                 {selectedConv.leadName[0]}
               </div>
               <div className="flex-1">
@@ -249,9 +252,9 @@ export default function WhatsAppWorkspace() {
 
             {/* Escalation Banner */}
             {selectedConv.escalationReason && (
-              <div className="flex items-center gap-2 px-4 py-2 bg-yellow-900/20 border-b border-yellow-800/30">
+              <div className="flex items-center gap-2 px-4 py-2 bg-[var(--warning-bg)] border-b border-amber-200">
                 <AlertTriangle className="w-3.5 h-3.5 text-[var(--warning)]" />
-                <span className="text-xs text-yellow-300">Escalated: {selectedConv.escalationReason}</span>
+                <span className="text-xs text-[var(--warning)]">Escalated: {selectedConv.escalationReason}</span>
                 {selectedConv.assignedTo && <span className="text-xs text-[var(--warning)] ml-1">→ {selectedConv.assignedTo}</span>}
               </div>
             )}
@@ -277,7 +280,7 @@ export default function WhatsAppWorkspace() {
                     onChange={e => setMessageText(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                     placeholder={selectedConv.status === 'AI Active' ? 'Type a message (AI will also respond)...' : 'Type a message...'}
-                    className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-blue-600 resize-none"
+                    className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-blue-600 resize-none"
                     rows={2}
                   />
                   <Button onClick={handleSend} disabled={!messageText.trim()} className="gap-1 self-end">
@@ -330,7 +333,7 @@ export default function WhatsAppWorkspace() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center">
+        <div className="hidden md:flex flex-1 items-center justify-center">
           <div className="text-center">
             <MessageSquare className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3" />
             <p className="text-[var(--text-secondary)] text-sm">Select a conversation</p>
@@ -387,7 +390,7 @@ function StatusDot({ status }: { status: string }) {
   };
   return (
     <div className="flex items-center gap-1">
-      <div className={`w-1.5 h-1.5 rounded-full ${colors[status] || 'bg-slate-500'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full ${colors[status] || 'bg-[var(--text-muted)]'}`} />
       <span className="text-xs text-[var(--text-muted)]">{labels[status] || status}</span>
     </div>
   );

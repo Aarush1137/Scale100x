@@ -20,7 +20,7 @@ export default function Settings() {
   const [wsName, setWsName] = useState('FreshBrew QSR Demo Workspace');
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
         <h1 className="text-xl font-bold text-[var(--text-primary)]">Settings</h1>
         <p className="text-sm text-[var(--text-muted)] mt-0.5">Configure workspace, agents, and integrations</p>
@@ -83,7 +83,7 @@ export default function Settings() {
                     <label className="text-xs text-[var(--text-muted)]">Escalation Keywords</label>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {agent.escalationKeywords.map(kw => (
-                        <span key={kw} className="text-xs bg-red-900/20 text-[var(--danger)] border border-red-800/20 px-2 py-0.5 rounded">{kw}</span>
+                        <span key={kw} className="text-xs bg-[var(--danger-bg)] text-[var(--danger)] border border-red-200 px-2 py-0.5 rounded">{kw}</span>
                       ))}
                     </div>
                   </div>
@@ -118,7 +118,7 @@ export default function Settings() {
               <Button size="xs" variant="secondary" disabled={true}>Configure</Button>
             </Card>
           ))}
-          <div className="p-3 bg-blue-900/10 border border-blue-800/20 rounded-lg">
+          <div className="p-3 bg-[var(--accent-subtle)] border border-blue-200 rounded-lg">
             <p className="text-xs text-[var(--accent)]">All integrations run in simulation mode. To connect live services, add API credentials via environment variables (see .env.example).</p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function Settings() {
               ))}
             </div>
 
-            <div className="p-3 bg-red-900/10 border border-red-800/20 rounded-lg flex items-start gap-2">
+            <div className="p-3 bg-[var(--danger-bg)] border border-red-200 rounded-lg flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-[var(--danger)] flex-shrink-0 mt-0.5" />
               <p className="text-xs text-[var(--danger)]">Reset will delete all your changes and restore the original seed data. This cannot be undone.</p>
             </div>

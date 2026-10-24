@@ -92,7 +92,7 @@ export default function SalesCRM() {
   );
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-[var(--text-primary)]">Sales CRM</h1>
@@ -157,11 +157,11 @@ export default function SalesCRM() {
             <tbody>
               {filtered.map(lead => (
                 <tr key={lead.id}
-                  className={`border-b border-[var(--border)]/50 hover:bg-[var(--bg-hover)]/50 cursor-pointer transition-colors ${isOverdue(lead) ? 'bg-red-900/5' : ''}`}
+                  className={`border-b border-[var(--border)]/50 hover:bg-[var(--bg-hover)]/50 cursor-pointer transition-colors ${isOverdue(lead) ? 'bg-[var(--danger-bg)]' : ''}`}
                   onClick={() => setSelectedLead(lead)}>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)] flex-shrink-0">{lead.name[0]}</div>
+                      <div className="w-7 h-7 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--accent)] flex-shrink-0">{lead.name[0]}</div>
                       <div>
                         <p className="font-medium text-[var(--text-primary)]">{lead.name}</p>
                         <p className="text-xs text-[var(--text-muted)]">{lead.email}</p>
@@ -218,13 +218,13 @@ export default function SalesCRM() {
                 {STAGES.map(stage => (
                   <button key={stage}
                     onClick={() => { changeLeadStage(drawerLead.id, stage, drawerLead.stage); showToast(`Moved to ${stage}`); }}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${drawerLead.stage === stage ? 'bg-blue-600 text-[var(--text-primary)]' : 'bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[#2a2a3e]'}`}>
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${drawerLead.stage === stage ? 'bg-blue-600 text-[var(--text-primary)]' : 'bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'}`}>
                     {stage}
                   </button>
                 ))}
               </div>
               {drawerLead.followUpDate && (
-                <div className={`flex items-center gap-2 mt-3 p-2 rounded-lg text-xs ${isOverdue(drawerLead) ? 'bg-red-900/20 text-[var(--danger)]' : 'bg-[var(--bg-app)] text-[var(--text-secondary)]'}`}>
+                <div className={`flex items-center gap-2 mt-3 p-2 rounded-lg text-xs ${isOverdue(drawerLead) ? 'bg-[var(--danger-bg)] text-[var(--danger)]' : 'bg-[var(--bg-app)] text-[var(--text-secondary)]'}`}>
                   {isOverdue(drawerLead) && <AlertTriangle className="w-3 h-3" />}
                   Follow-up: {formatDate(drawerLead.followUpDate)}
                 </div>
@@ -243,7 +243,7 @@ export default function SalesCRM() {
               {drawerLead.notes && <p className="text-xs text-[var(--text-secondary)] mb-2 p-2 bg-[var(--bg-app)] rounded-lg">{drawerLead.notes}</p>}
               <div className="flex gap-2">
                 <textarea value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="Add a note..."
-                  className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text-primary)] placeholder-slate-600 focus:outline-none resize-none" rows={2} />
+                  className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none resize-none" rows={2} />
                 <Button size="xs" onClick={handleAddNote}>Save</Button>
               </div>
             </Card>
@@ -264,7 +264,7 @@ export default function SalesCRM() {
               <div className="flex gap-2">
                 <input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder="Add a task..."
                   onKeyDown={e => e.key === 'Enter' && handleAddTask()}
-                  className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] placeholder-slate-600 focus:outline-none" />
+                  className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none" />
                 <Button size="xs" onClick={handleAddTask}>Add</Button>
               </div>
             </Card>

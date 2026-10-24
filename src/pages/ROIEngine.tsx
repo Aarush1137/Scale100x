@@ -118,7 +118,7 @@ export default function ROIEngine() {
   const breakevenMonths = isFinite(fin.breakeven) ? Math.ceil(fin.breakeven) : null;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-[var(--text-primary)]">ROI Engine</h1>
@@ -151,7 +151,7 @@ export default function ROIEngine() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Assumptions Panel */}
         <Card className="p-5 space-y-3">
           <h2 className="text-sm font-semibold text-[var(--text-primary)]">Assumptions</h2>
@@ -317,7 +317,7 @@ function MetricCard({ label, value, sub, color }: { label: string; value: string
 }
 
 function InsightCard({ icon, title, content, color }: { icon: React.ReactNode; title: string; content: string; color: string }) {
-  const borders: Record<string, string> = { blue: 'border-blue-800/30', yellow: 'border-yellow-800/30', gray: 'border-[var(--border)]' };
+  const borders: Record<string, string> = { blue: 'border-blue-200', yellow: 'border-amber-200', gray: 'border-[var(--border)]' };
   return (
     <Card className={`p-4 border ${borders[color] || borders.gray}`}>
       <div className="flex items-center gap-2 mb-2">{icon}<p className="text-sm font-medium text-[var(--text-primary)]">{title}</p></div>

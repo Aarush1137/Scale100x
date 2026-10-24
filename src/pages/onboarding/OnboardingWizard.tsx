@@ -68,9 +68,9 @@ function calcReadiness(form: FormData) {
 }
 
 function ragColor(score: number) {
-  if (score >= 70) return { color: 'text-[var(--success)]', bg: 'bg-emerald-900/20', label: 'GREEN', variant: 'green' as const };
-  if (score >= 40) return { color: 'text-[var(--warning)]', bg: 'bg-yellow-900/20', label: 'AMBER', variant: 'yellow' as const };
-  return { color: 'text-[var(--danger)]', bg: 'bg-red-900/20', label: 'RED', variant: 'red' as const };
+  if (score >= 70) return { color: 'text-[var(--success)]', bg: 'bg-[var(--success-bg)]', label: 'GREEN', variant: 'green' as const };
+  if (score >= 40) return { color: 'text-[var(--warning)]', bg: 'bg-[var(--warning-bg)]', label: 'AMBER', variant: 'yellow' as const };
+  return { color: 'text-[var(--danger)]', bg: 'bg-[var(--danger-bg)]', label: 'RED', variant: 'red' as const };
 }
 
 export default function OnboardingWizard() {
@@ -174,7 +174,7 @@ export default function OnboardingWizard() {
     return (
       <div className="p-6 flex items-center justify-center min-h-[60vh]">
         <Card className="p-8 text-center max-w-md">
-          <div className="w-16 h-16 rounded-full bg-emerald-900/20 border border-emerald-800/30 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full bg-[var(--success-bg)] border border-green-200 flex items-center justify-center mx-auto mb-4">
             <Check className="w-8 h-8 text-[var(--success)]" />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Brand Onboarded!</h2>
@@ -191,7 +191,7 @@ export default function OnboardingWizard() {
   const { dims, total } = calcReadiness(form);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 md:space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-[var(--text-primary)]">Onboard New Brand</h1>
@@ -203,18 +203,19 @@ export default function OnboardingWizard() {
       </div>
 
       {/* Progress */}
-      <div className="flex items-center gap-2">
+      <p className="text-sm text-[var(--text-muted)] md:hidden">Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
+      <div className="hidden md:flex items-center gap-2">
         {STEPS.map((s, i) => (
           <React.Fragment key={s}>
             <div className={`flex items-center gap-2 ${i <= step ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`}>
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                i < step ? 'bg-blue-600 text-[var(--text-primary)]' : i === step ? 'bg-blue-600/20 border border-blue-600 text-[var(--accent)]' : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'
+                i < step ? 'bg-[var(--accent)] text-white' : i === step ? 'bg-[var(--accent-subtle)] border border-[var(--accent)] text-[var(--accent)]' : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'
               }`}>
                 {i < step ? <Check className="w-3 h-3" /> : i + 1}
               </div>
               <span className="text-xs hidden sm:block">{s}</span>
             </div>
-            {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 ${i < step ? 'bg-blue-600' : 'bg-[var(--bg-hover)]'}`} />}
+            {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 ${i < step ? 'bg-[var(--accent)]' : 'bg-[var(--bg-hover)]'}`} />}
           </React.Fragment>
         ))}
       </div>
@@ -259,9 +260,9 @@ export default function OnboardingWizard() {
 
         {step === 1 && (
           <div className="space-y-4">
-            <div className="flex items-center gap-2 p-3 bg-yellow-900/10 border border-yellow-800/20 rounded-lg">
+            <div className="flex items-center gap-2 p-3 bg-[var(--warning-bg)] border border-amber-200 rounded-lg">
               <AlertCircle className="w-4 h-4 text-[var(--warning)] flex-shrink-0" />
-              <p className="text-xs text-yellow-300"><strong>DEMO MODE:</strong> Files are not actually uploaded. Only metadata is stored in localStorage for demo purposes.</p>
+              <p className="text-xs text-[var(--warning)]"><strong>DEMO MODE:</strong> Files are not actually uploaded. Only metadata is stored in localStorage for demo purposes.</p>
             </div>
             <div
               onDragOver={e => { e.preventDefault(); setDragOver(true); }}
@@ -272,7 +273,7 @@ export default function OnboardingWizard() {
                   updateField('documents', [...form.documents, { name: f.name, size: `${Math.round(f.size / 1024)}KB`, type: f.type || 'document', uploadedAt: new Date().toISOString() }]);
                 });
               }}
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragOver ? 'border-blue-500 bg-blue-900/10' : 'border-[var(--border)] hover:border-blue-600/50'}`}
+              className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragOver ? 'border-blue-500 bg-[var(--accent-subtle)]' : 'border-[var(--border)] hover:border-[var(--accent)]'}`}
             >
               <Upload className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-2" />
               <p className="text-sm text-[var(--text-secondary)]">Drag and drop files, or <label className="text-[var(--accent)] cursor-pointer hover:text-[var(--accent)]">
@@ -289,7 +290,7 @@ export default function OnboardingWizard() {
               <div className="space-y-2">
                 {form.documents.map((doc, i) => (
                   <div key={i} className="flex items-center gap-3 p-2.5 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg">
-                    <div className="w-8 h-8 rounded-lg bg-blue-900/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-[var(--accent-subtle)] flex items-center justify-center">
                       <Upload className="w-3.5 h-3.5 text-[var(--accent)]" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -335,7 +336,7 @@ export default function OnboardingWizard() {
                               const val = Math.max(0, Math.min(20, parseFloat(e.target.value) || 0));
                               updateField(row.key, val);
                             }}
-                            className="w-16 bg-[var(--bg-app)] border border-[var(--border)] rounded px-2 py-1 text-center text-[var(--text-primary)] focus:outline-none focus:border-blue-600"
+                            className="w-16 bg-[var(--bg-app)] border border-[var(--border)] rounded px-2 py-1 text-center text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                           />
                           <span className="text-[var(--text-secondary)]">%</span>
                         </div>
@@ -352,9 +353,9 @@ export default function OnboardingWizard() {
               </table>
             </div>
             {form.royaltySplit + form.franchiseeFee + form.marketingFund > 15 && (
-              <div className="flex items-center gap-2 p-3 bg-yellow-900/10 border border-yellow-800/20 rounded-lg">
+              <div className="flex items-center gap-2 p-3 bg-[var(--warning-bg)] border border-amber-200 rounded-lg">
                 <AlertCircle className="w-4 h-4 text-[var(--warning)]" />
-                <p className="text-xs text-yellow-300">Total fees exceed 15% — this may reduce franchisee attractiveness. Industry benchmark is 8-12%.</p>
+                <p className="text-xs text-[var(--warning)]">Total fees exceed 15% — this may reduce franchisee attractiveness. Industry benchmark is 8-12%.</p>
               </div>
             )}
             <div className="flex justify-center">
@@ -428,7 +429,7 @@ export default function OnboardingWizard() {
                 );
               })}
             </div>
-            <div className="p-3 bg-blue-900/10 border border-blue-800/20 rounded-lg">
+            <div className="p-3 bg-[var(--accent-subtle)] border border-blue-200 rounded-lg">
               <p className="text-xs text-[var(--accent)]">
                 {total >= 70 ? '✅ This brand is ready for franchise expansion. Proceed to onboarding.' :
                  total >= 40 ? '⚠️ Brand shows promise but needs improvement in highlighted areas before full expansion.' :

@@ -51,7 +51,7 @@ export default function CommandCenter() {
     .slice(0, 8);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-[var(--text-primary)]">Command Center</h1>
@@ -63,7 +63,7 @@ export default function CommandCenter() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard label="Brands" value={data.brands.length} icon={<Coffee className="w-4 h-4" />} color="blue" onClick={() => navigate('/onboarding')} />
         <StatCard label="Total Leads" value={totalLeads} icon={<Users className="w-4 h-4" />} color="blue" trend={12} onClick={() => navigate('/crm')} />
         <StatCard label="High Intent" value={highIntentLeads} sub="Score ≥75" icon={<Target className="w-4 h-4" />} color="green" onClick={() => navigate('/crm')} />
@@ -106,7 +106,7 @@ export default function CommandCenter() {
             <div className="text-center -mt-4">
               <p className="text-3xl font-bold text-[var(--text-primary)] font-mono">78</p>
               <p className="text-xs text-[var(--text-muted)]">AI Readiness Score</p>
-              <Badge variant="green" className="mt-2">AMBER → GREEN</Badge>
+              <span className="text-xs text-[var(--success)] font-medium mt-2 block">Improving</span>
             </div>
           </div>
         </Card>
@@ -119,13 +119,21 @@ export default function CommandCenter() {
             <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer">View all →</button>
           </div>
           <div className="space-y-2">
-            {recentConvs.map(conv => (
+            {recentConvs.map((conv, index) => {
+              const avatarStyles = [
+                'bg-[var(--accent-subtle)] text-[var(--accent)]',
+                'bg-purple-50 text-purple-600',
+                'bg-green-50 text-[var(--success)]',
+                'bg-orange-50 text-orange-600',
+                'bg-pink-50 text-pink-600',
+              ];
+              return (
               <div
                 key={conv.id}
                 onClick={() => navigate('/agents/whatsapp')}
                 className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[var(--bg-hover)] cursor-pointer transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--accent)] flex-shrink-0">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${avatarStyles[index % avatarStyles.length]}`}>
                   {conv.leadName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -140,7 +148,8 @@ export default function CommandCenter() {
                 </div>
                 <span className="text-xs text-[var(--text-muted)] flex-shrink-0">{formatDistanceToNow(conv.lastMessageAt)}</span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
 
@@ -160,9 +169,12 @@ export default function CommandCenter() {
         </Card>
       </div>
 
-      <Card className="p-5">
+      <div className="pt-2 border-t border-[var(--border)]">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-[var(--text-primary)]">Automation Performance</h2>
+          <div>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Automation Performance</h2>
+            <p className="text-xs text-[var(--text-muted)] mt-0.5">Last 30 days</p>
+          </div>
           <button onClick={() => navigate('/automations')} className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer">View details →</button>
         </div>
         <ResponsiveContainer width="100%" height={120}>
@@ -192,7 +204,7 @@ export default function CommandCenter() {
             <p className="text-xs text-[var(--text-muted)]">Total hours saved</p>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

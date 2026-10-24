@@ -223,34 +223,29 @@ export function ToastContainer() {
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 interface StatCardProps { label: string; value: string | number; sub?: string; icon?: React.ReactNode; trend?: number; color?: string; onClick?: () => void; }
-export function StatCard({ label, value, sub, icon, trend, color = 'blue', onClick }: StatCardProps) {
-  const iconColors: Record<string, string> = {
-    blue: 'text-[var(--accent)] bg-[var(--accent-subtle)]',
-    green: 'text-[var(--success)] bg-[var(--success-bg)]',
-    yellow: 'text-[var(--warning)] bg-[var(--warning-bg)]',
-    red: 'text-[var(--danger)] bg-[var(--danger-bg)]',
-    purple: 'text-purple-600 bg-purple-50',
+export function StatCard({ label, value, sub, trend, color = 'blue', onClick }: StatCardProps) {
+  const borderColors: Record<string, string> = {
+    blue: 'border-l-[var(--accent)]',
+    green: 'border-l-[var(--success)]',
+    yellow: 'border-l-[var(--warning)]',
+    red: 'border-l-[var(--danger)]',
+    purple: 'border-l-purple-500',
   };
   return (
-    <Card className={`p-4 ${onClick ? 'cursor-pointer' : ''}`} onClick={onClick}>
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide">{label}</p>
-          <p className="text-2xl font-semibold text-[var(--text-primary)] font-mono mt-1 tabular-nums">{value}</p>
-          {sub && <p className="text-xs text-[var(--text-muted)] mt-0.5">{sub}</p>}
-          {trend !== undefined && (
-            <p className={`text-xs mt-1 font-medium ${trend >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
-              {trend >= 0 ? '+' : ''}{trend}% this week
-            </p>
-          )}
-        </div>
-        {icon && (
-          <div className={`p-2 rounded-lg flex-shrink-0 ${iconColors[color] || iconColors.blue}`}>
-            {icon}
-          </div>
-        )}
-      </div>
-    </Card>
+    <div
+      className={`bg-white border border-[var(--border)] border-l-2 ${borderColors[color] || borderColors.blue} rounded-xl p-4 ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+      style={{ boxShadow: 'var(--shadow-sm)' }}
+      onClick={onClick}
+    >
+      <p className="text-xs text-[var(--text-muted)] mb-1.5 truncate">{label}</p>
+      <p className="text-2xl font-semibold text-[var(--text-primary)] font-mono tabular-nums leading-none">{value}</p>
+      {sub && <p className="text-xs text-[var(--text-muted)] mt-1">{sub}</p>}
+      {trend !== undefined && (
+        <p className={`text-xs mt-1.5 font-medium ${trend >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
+          {trend >= 0 ? '+' : ''}{trend}% this week
+        </p>
+      )}
+    </div>
   );
 }
 
