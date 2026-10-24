@@ -68,9 +68,9 @@ function calcReadiness(form: FormData) {
 }
 
 function ragColor(score: number) {
-  if (score >= 70) return { color: 'text-emerald-400', bg: 'bg-emerald-900/20', label: 'GREEN', variant: 'green' as const };
-  if (score >= 40) return { color: 'text-yellow-400', bg: 'bg-yellow-900/20', label: 'AMBER', variant: 'yellow' as const };
-  return { color: 'text-red-400', bg: 'bg-red-900/20', label: 'RED', variant: 'red' as const };
+  if (score >= 70) return { color: 'text-[var(--success)]', bg: 'bg-emerald-900/20', label: 'GREEN', variant: 'green' as const };
+  if (score >= 40) return { color: 'text-[var(--warning)]', bg: 'bg-yellow-900/20', label: 'AMBER', variant: 'yellow' as const };
+  return { color: 'text-[var(--danger)]', bg: 'bg-red-900/20', label: 'RED', variant: 'red' as const };
 }
 
 export default function OnboardingWizard() {
@@ -175,10 +175,10 @@ export default function OnboardingWizard() {
       <div className="p-6 flex items-center justify-center min-h-[60vh]">
         <Card className="p-8 text-center max-w-md">
           <div className="w-16 h-16 rounded-full bg-emerald-900/20 border border-emerald-800/30 flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-emerald-400" />
+            <Check className="w-8 h-8 text-[var(--success)]" />
           </div>
-          <h2 className="text-xl font-bold text-slate-100 mb-2">Brand Onboarded!</h2>
-          <p className="text-slate-400 text-sm mb-6">{form.brandName} has been added to the platform. The AI readiness score has been calculated.</p>
+          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Brand Onboarded!</h2>
+          <p className="text-[var(--text-secondary)] text-sm mb-6">{form.brandName} has been added to the platform. The AI readiness score has been calculated.</p>
           <div className="flex gap-3 justify-center">
             <Button variant="secondary" onClick={() => navigate('/onboarding')}>View All Brands</Button>
             <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
@@ -194,8 +194,8 @@ export default function OnboardingWizard() {
     <div className="p-6 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-100">Onboard New Brand</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
+          <h1 className="text-xl font-bold text-[var(--text-primary)]">Onboard New Brand</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-0.5">Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
         </div>
         <Button size="sm" variant="secondary" onClick={() => { saveSession(step, form); showToast('Draft saved'); }}>
           Save Draft
@@ -206,15 +206,15 @@ export default function OnboardingWizard() {
       <div className="flex items-center gap-2">
         {STEPS.map((s, i) => (
           <React.Fragment key={s}>
-            <div className={`flex items-center gap-2 ${i <= step ? 'text-blue-400' : 'text-slate-600'}`}>
+            <div className={`flex items-center gap-2 ${i <= step ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`}>
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                i < step ? 'bg-blue-600 text-white' : i === step ? 'bg-blue-600/20 border border-blue-600 text-blue-400' : 'bg-[#1E1E2E] text-slate-600'
+                i < step ? 'bg-blue-600 text-[var(--text-primary)]' : i === step ? 'bg-blue-600/20 border border-blue-600 text-[var(--accent)]' : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'
               }`}>
                 {i < step ? <Check className="w-3 h-3" /> : i + 1}
               </div>
               <span className="text-xs hidden sm:block">{s}</span>
             </div>
-            {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 ${i < step ? 'bg-blue-600' : 'bg-[#1E1E2E]'}`} />}
+            {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 ${i < step ? 'bg-blue-600' : 'bg-[var(--bg-hover)]'}`} />}
           </React.Fragment>
         ))}
       </div>
@@ -260,7 +260,7 @@ export default function OnboardingWizard() {
         {step === 1 && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 p-3 bg-yellow-900/10 border border-yellow-800/20 rounded-lg">
-              <AlertCircle className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[var(--warning)] flex-shrink-0" />
               <p className="text-xs text-yellow-300"><strong>DEMO MODE:</strong> Files are not actually uploaded. Only metadata is stored in localStorage for demo purposes.</p>
             </div>
             <div
@@ -272,10 +272,10 @@ export default function OnboardingWizard() {
                   updateField('documents', [...form.documents, { name: f.name, size: `${Math.round(f.size / 1024)}KB`, type: f.type || 'document', uploadedAt: new Date().toISOString() }]);
                 });
               }}
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragOver ? 'border-blue-500 bg-blue-900/10' : 'border-[#1E1E2E] hover:border-blue-600/50'}`}
+              className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragOver ? 'border-blue-500 bg-blue-900/10' : 'border-[var(--border)] hover:border-blue-600/50'}`}
             >
-              <Upload className="w-8 h-8 text-slate-500 mx-auto mb-2" />
-              <p className="text-sm text-slate-400">Drag and drop files, or <label className="text-blue-400 cursor-pointer hover:text-blue-300">
+              <Upload className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-2" />
+              <p className="text-sm text-[var(--text-secondary)]">Drag and drop files, or <label className="text-[var(--accent)] cursor-pointer hover:text-[var(--accent)]">
                 browse
                 <input type="file" multiple className="hidden" onChange={e => {
                   Array.from(e.target.files || []).forEach(f => {
@@ -283,39 +283,39 @@ export default function OnboardingWizard() {
                   });
                 }} />
               </label></p>
-              <p className="text-xs text-slate-600 mt-1">PDF, DOCX, XLSX supported</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1">PDF, DOCX, XLSX supported</p>
             </div>
             {form.documents.length > 0 && (
               <div className="space-y-2">
                 {form.documents.map((doc, i) => (
-                  <div key={i} className="flex items-center gap-3 p-2.5 bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg">
+                  <div key={i} className="flex items-center gap-3 p-2.5 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg">
                     <div className="w-8 h-8 rounded-lg bg-blue-900/20 flex items-center justify-center">
-                      <Upload className="w-3.5 h-3.5 text-blue-400" />
+                      <Upload className="w-3.5 h-3.5 text-[var(--accent)]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-200 truncate">{doc.name}</p>
-                      <p className="text-xs text-slate-500">{doc.size} · {doc.type}</p>
+                      <p className="text-sm text-[var(--text-primary)] truncate">{doc.name}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{doc.size} · {doc.type}</p>
                     </div>
                     <Badge variant="green">Stored</Badge>
-                    <button onClick={() => updateField('documents', form.documents.filter((_, j) => j !== i))} className="text-slate-500 hover:text-red-400 cursor-pointer"><X className="w-4 h-4" /></button>
+                    <button onClick={() => updateField('documents', form.documents.filter((_, j) => j !== i))} className="text-[var(--text-muted)] hover:text-[var(--danger)] cursor-pointer"><X className="w-4 h-4" /></button>
                   </div>
                 ))}
               </div>
             )}
-            <p className="text-xs text-slate-600">Recommended: Franchise Agreement, FSSAI License, Brand Guidelines, Operations Manual</p>
+            <p className="text-xs text-[var(--text-muted)]">Recommended: Franchise Agreement, FSSAI License, Brand Guidelines, Operations Manual</p>
           </div>
         )}
 
         {step === 2 && (
           <div className="space-y-5">
-            <p className="text-sm text-slate-400">Configure the revenue split model for this franchise brand.</p>
+            <p className="text-sm text-[var(--text-secondary)]">Configure the revenue split model for this franchise brand.</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#1E1E2E]">
-                    <th className="text-left py-2 text-slate-400 font-medium">Fee Type</th>
-                    <th className="text-center py-2 text-slate-400 font-medium">Percentage</th>
-                    <th className="text-left py-2 text-slate-400 font-medium">Description</th>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="text-left py-2 text-[var(--text-secondary)] font-medium">Fee Type</th>
+                    <th className="text-center py-2 text-[var(--text-secondary)] font-medium">Percentage</th>
+                    <th className="text-left py-2 text-[var(--text-secondary)] font-medium">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -324,8 +324,8 @@ export default function OnboardingWizard() {
                     { key: 'franchiseeFee' as const, label: 'Technology Fee', description: 'Platform and tech support fee' },
                     { key: 'marketingFund' as const, label: 'Marketing Fund', description: 'National marketing contribution' },
                   ].map(row => (
-                    <tr key={row.key} className="border-b border-[#1E1E2E]/50">
-                      <td className="py-3 text-slate-200">{row.label}</td>
+                    <tr key={row.key} className="border-b border-[var(--border)]/50">
+                      <td className="py-3 text-[var(--text-primary)]">{row.label}</td>
                       <td className="py-3 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <input
@@ -335,25 +335,25 @@ export default function OnboardingWizard() {
                               const val = Math.max(0, Math.min(20, parseFloat(e.target.value) || 0));
                               updateField(row.key, val);
                             }}
-                            className="w-16 bg-[#0A0A0F] border border-[#1E1E2E] rounded px-2 py-1 text-center text-slate-100 focus:outline-none focus:border-blue-600"
+                            className="w-16 bg-[var(--bg-app)] border border-[var(--border)] rounded px-2 py-1 text-center text-[var(--text-primary)] focus:outline-none focus:border-blue-600"
                           />
-                          <span className="text-slate-400">%</span>
+                          <span className="text-[var(--text-secondary)]">%</span>
                         </div>
                       </td>
-                      <td className="py-3 text-slate-500 text-xs">{row.description}</td>
+                      <td className="py-3 text-[var(--text-muted)] text-xs">{row.description}</td>
                     </tr>
                   ))}
-                  <tr className="bg-[#0A0A0F]">
-                    <td className="py-2 px-2 text-slate-300 font-medium text-sm">Total Brand Fees</td>
-                    <td className="py-2 text-center text-blue-400 font-bold font-mono">{(form.royaltySplit + form.franchiseeFee + form.marketingFund).toFixed(1)}%</td>
-                    <td className="py-2 text-xs text-slate-600">Per revenue</td>
+                  <tr className="bg-[var(--bg-app)]">
+                    <td className="py-2 px-2 text-[var(--text-secondary)] font-medium text-sm">Total Brand Fees</td>
+                    <td className="py-2 text-center text-[var(--accent)] font-bold font-mono">{(form.royaltySplit + form.franchiseeFee + form.marketingFund).toFixed(1)}%</td>
+                    <td className="py-2 text-xs text-[var(--text-muted)]">Per revenue</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             {form.royaltySplit + form.franchiseeFee + form.marketingFund > 15 && (
               <div className="flex items-center gap-2 p-3 bg-yellow-900/10 border border-yellow-800/20 rounded-lg">
-                <AlertCircle className="w-4 h-4 text-yellow-400" />
+                <AlertCircle className="w-4 h-4 text-[var(--warning)]" />
                 <p className="text-xs text-yellow-300">Total fees exceed 15% — this may reduce franchisee attractiveness. Industry benchmark is 8-12%.</p>
               </div>
             )}
@@ -367,7 +367,7 @@ export default function OnboardingWizard() {
                       { name: 'Marketing', value: form.marketingFund },
                       { name: 'Franchisee', value: Math.max(0, 100 - form.royaltySplit - form.franchiseeFee - form.marketingFund) },
                     ]} cx="50%" cy="50%" outerRadius={70} dataKey="value" stroke="none">
-                      <Cell fill="#2563EB" /><Cell fill="#10B981" /><Cell fill="#F59E0B" /><Cell fill="#1E1E2E" />
+                      <Cell fill="#2563EB" /><Cell fill="#10B981" /><Cell fill="#F59E0B" /><Cell fill="var(--border)" />
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
@@ -377,11 +377,11 @@ export default function OnboardingWizard() {
                   { color: '#2563EB', label: `Royalty ${form.royaltySplit}%` },
                   { color: '#10B981', label: `Tech Fee ${form.franchiseeFee}%` },
                   { color: '#F59E0B', label: `Marketing ${form.marketingFund}%` },
-                  { color: '#1E1E2E', label: `Franchisee ~${Math.max(0, 100 - form.royaltySplit - form.franchiseeFee - form.marketingFund).toFixed(0)}%` },
+                  { color: 'var(--border)', label: `Franchisee ~${Math.max(0, 100 - form.royaltySplit - form.franchiseeFee - form.marketingFund).toFixed(0)}%` },
                 ].map(d => (
                   <div key={d.label} className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: d.color }} />
-                    <span className="text-xs text-slate-400">{d.label}</span>
+                    <span className="text-xs text-[var(--text-secondary)]">{d.label}</span>
                   </div>
                 ))}
               </div>
@@ -393,8 +393,8 @@ export default function OnboardingWizard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-slate-100">AI Readiness Score</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Calculated from your brand profile data</p>
+                <h3 className="text-base font-semibold text-[var(--text-primary)]">AI Readiness Score</h3>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">Calculated from your brand profile data</p>
               </div>
               <div className="text-center">
                 <p className={`text-4xl font-bold font-mono ${ragColor(total).color}`}>{total}</p>
@@ -412,11 +412,11 @@ export default function OnboardingWizard() {
                 const score = Math.round(dims[d.key as keyof typeof dims]);
                 const rag = ragColor(score);
                 return (
-                  <div key={d.key} className="p-3 bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg">
+                  <div key={d.key} className="p-3 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div>
-                        <p className="text-sm font-medium text-slate-200">{d.label}</p>
-                        <p className="text-xs text-slate-500">{d.desc}</p>
+                        <p className="text-sm font-medium text-[var(--text-primary)]">{d.label}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{d.desc}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`text-sm font-bold font-mono ${rag.color}`}>{score}</span>
@@ -429,7 +429,7 @@ export default function OnboardingWizard() {
               })}
             </div>
             <div className="p-3 bg-blue-900/10 border border-blue-800/20 rounded-lg">
-              <p className="text-xs text-blue-300">
+              <p className="text-xs text-[var(--accent)]">
                 {total >= 70 ? '✅ This brand is ready for franchise expansion. Proceed to onboarding.' :
                  total >= 40 ? '⚠️ Brand shows promise but needs improvement in highlighted areas before full expansion.' :
                  '❌ This brand needs significant preparation before franchise expansion is recommended.'}

@@ -233,8 +233,8 @@ export default function CollateralStudio() {
   return (
     <div className="flex h-[calc(100vh-57px)] overflow-hidden">
       {/* Left: Asset List */}
-      <div className="w-64 flex-shrink-0 border-r border-[#1E1E2E] flex flex-col bg-[#111118]">
-        <div className="p-3 border-b border-[#1E1E2E] space-y-2">
+      <div className="w-64 flex-shrink-0 border-r border-[var(--border)] flex flex-col bg-white">
+        <div className="p-3 border-b border-[var(--border)] space-y-2">
           <Button size="sm" className="w-full gap-2" onClick={() => setCreateOpen(true)}>
             <Plus className="w-3.5 h-3.5" /> New Asset
           </Button>
@@ -242,7 +242,7 @@ export default function CollateralStudio() {
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none"
+            className="w-full bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-2 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none"
           >
             <option value="">All Status</option>
             {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -254,14 +254,14 @@ export default function CollateralStudio() {
             <div
               key={asset.id}
               onClick={() => setSelectedAssetId(asset.id)}
-              className={`p-3 cursor-pointer border-b border-[#1E1E2E]/50 transition-colors ${selectedAssetId === asset.id ? 'bg-blue-600/10 border-l-2 border-l-blue-600' : 'hover:bg-[#1E1E2E]'}`}
+              className={`p-3 cursor-pointer border-b border-[var(--border)]/50 transition-colors ${selectedAssetId === asset.id ? 'bg-blue-600/10 border-l-2 border-l-blue-600' : 'hover:bg-[var(--bg-hover)]'}`}
             >
               <div className="flex items-start justify-between gap-1">
-                <p className="text-xs font-medium text-slate-200 truncate">{asset.name}</p>
+                <p className="text-xs font-medium text-[var(--text-primary)] truncate">{asset.name}</p>
                 {statusBadge(asset.status)}
               </div>
-              <p className="text-xs text-slate-500 mt-1">{asset.type}</p>
-              <p className="text-xs text-slate-600 mt-0.5">{formatDate(asset.updatedAt)}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1">{asset.type}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">{formatDate(asset.updatedAt)}</p>
             </div>
           ))}
         </div>
@@ -271,10 +271,10 @@ export default function CollateralStudio() {
       {selectedAsset ? (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Toolbar */}
-          <div className="flex items-center gap-2 p-3 border-b border-[#1E1E2E] flex-shrink-0">
+          <div className="flex items-center gap-2 p-3 border-b border-[var(--border)] flex-shrink-0">
             <div className="flex-1 min-w-0">
               <input
-                className="text-sm font-semibold text-slate-100 bg-transparent focus:outline-none border-b border-transparent focus:border-blue-600 pb-0.5 w-full max-w-xs"
+                className="text-sm font-semibold text-[var(--text-primary)] bg-transparent focus:outline-none border-b border-transparent focus:border-blue-600 pb-0.5 w-full max-w-xs"
                 value={selectedAsset.name}
                 onChange={e => updateAsset(selectedAsset.id, { name: e.target.value })}
               />
@@ -288,7 +288,7 @@ export default function CollateralStudio() {
               <select
                 value={selectedAsset.status}
                 onChange={e => handleStatusChange(e.target.value as AssetStatus)}
-                className="bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none"
+                className="bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-2 py-1 text-xs text-[var(--text-secondary)] focus:outline-none"
               >
                 {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
@@ -312,20 +312,20 @@ export default function CollateralStudio() {
             <textarea
               value={selectedAsset.content}
               onChange={e => handleContentChange(e.target.value)}
-              className="flex-1 bg-[#0A0A0F] text-slate-200 text-sm p-4 resize-none focus:outline-none font-mono leading-relaxed"
+              className="flex-1 bg-[var(--bg-app)] text-[var(--text-primary)] text-sm p-4 resize-none focus:outline-none font-mono leading-relaxed"
               spellCheck={false}
             />
 
             {/* History Sidebar */}
             {showHistory && (
-              <div className="w-48 border-l border-[#1E1E2E] p-3 space-y-2 overflow-y-auto">
-                <p className="text-xs font-medium text-slate-400">Version History</p>
-                {selectedAsset.versions.length === 0 && <p className="text-xs text-slate-600">No versions yet</p>}
+              <div className="w-48 border-l border-[var(--border)] p-3 space-y-2 overflow-y-auto">
+                <p className="text-xs font-medium text-[var(--text-secondary)]">Version History</p>
+                {selectedAsset.versions.length === 0 && <p className="text-xs text-[var(--text-muted)]">No versions yet</p>}
                 {[...selectedAsset.versions].reverse().map(v => (
-                  <div key={v.id} className="p-2 bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg cursor-pointer hover:border-blue-600/40"
+                  <div key={v.id} className="p-2 bg-[var(--bg-app)] border border-[var(--border)] rounded-lg cursor-pointer hover:border-blue-600/40"
                     onClick={() => updateAsset(selectedAsset.id, { content: v.content })}>
-                    <p className="text-xs font-medium text-slate-300">{v.label}</p>
-                    <p className="text-xs text-slate-600">{formatDate(v.createdAt)}</p>
+                    <p className="text-xs font-medium text-[var(--text-secondary)]">{v.label}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{formatDate(v.createdAt)}</p>
                   </div>
                 ))}
               </div>
@@ -347,7 +347,7 @@ export default function CollateralStudio() {
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create New Asset" size="md">
         <div className="space-y-3">
           <div className="flex items-center gap-2 p-2 bg-yellow-900/10 border border-yellow-800/20 rounded-lg">
-            <AlertCircle className="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 text-[var(--warning)] flex-shrink-0" />
             <p className="text-xs text-yellow-300">Content is template-generated. No AI API is called in demo mode.</p>
           </div>
           <Input label="Asset Name" placeholder="FreshBrew Pitch Deck Q1 2025" value={newForm.name} onChange={e => setNewForm(f => ({ ...f, name: e.target.value }))} />

@@ -1,34 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown, Check, AlertCircle, Info } from 'lucide-react';
 
-// ─── Button ───────────────────────────────────────────────────────────────────
+// ─── Button ──────────────────────────────────────────────────────────────────
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   loading?: boolean;
 }
-
 export function Button({ variant = 'primary', size = 'md', loading, children, className = '', disabled, ...props }: ButtonProps) {
-  const base = 'inline-flex items-center gap-2 font-medium rounded-lg transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+  const base = 'inline-flex items-center gap-2 font-medium rounded-lg transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1';
   const variants = {
-    primary: 'bg-blue-600 hover:bg-blue-500 text-white',
-    secondary: 'bg-[#1E1E2E] hover:bg-[#2a2a3e] text-slate-200 border border-[#1E1E2E]',
-    ghost: 'hover:bg-[#1E1E2E] text-slate-300 hover:text-white',
-    danger: 'bg-red-600 hover:bg-red-500 text-white',
-    success: 'bg-emerald-600 hover:bg-emerald-500 text-white',
+    primary: 'bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-sm',
+    secondary: 'bg-white hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border)]',
+    ghost: 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
+    danger: 'bg-[var(--danger)] hover:bg-red-700 text-white',
+    success: 'bg-[var(--success)] hover:bg-green-700 text-white',
   };
-  const sizes = {
-    xs: 'px-2 py-1 text-xs',
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-5 py-2.5 text-base',
-  };
+  const sizes = { xs: 'px-2 py-1 text-xs', sm: 'px-3 py-1.5 text-sm', md: 'px-4 py-2 text-sm', lg: 'px-5 py-2.5 text-base' };
   return (
-    <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
-      disabled={disabled || loading}
-      {...props}
-    >
+    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} disabled={disabled || loading} {...props}>
       {loading && <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />}
       {children}
     </button>
@@ -40,7 +30,8 @@ interface CardProps { children: React.ReactNode; className?: string; onClick?: (
 export function Card({ children, className = '', onClick }: CardProps) {
   return (
     <div
-      className={`bg-[#111118] border border-[#1E1E2E] rounded-xl ${onClick ? 'cursor-pointer hover:border-blue-600/40 transition-colors' : ''} ${className}`}
+      className={`bg-white border border-[var(--border)] rounded-xl ${onClick ? 'cursor-pointer hover:border-[var(--accent)] transition-colors hover:shadow-sm' : ''} ${className}`}
+      style={{ boxShadow: 'var(--shadow-sm)' }}
       onClick={onClick}
     >
       {children}
@@ -53,13 +44,13 @@ type BadgeVariant = 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'purple' | 'o
 interface BadgeProps { children: React.ReactNode; variant?: BadgeVariant; className?: string; }
 export function Badge({ children, variant = 'gray', className = '' }: BadgeProps) {
   const variants: Record<BadgeVariant, string> = {
-    blue: 'bg-blue-900/30 text-blue-300 border-blue-800/30',
-    green: 'bg-emerald-900/30 text-emerald-300 border-emerald-800/30',
-    yellow: 'bg-yellow-900/30 text-yellow-300 border-yellow-800/30',
-    red: 'bg-red-900/30 text-red-300 border-red-800/30',
-    gray: 'bg-slate-800/50 text-slate-400 border-slate-700/30',
-    purple: 'bg-purple-900/30 text-purple-300 border-purple-800/30',
-    orange: 'bg-orange-900/30 text-orange-300 border-orange-800/30',
+    blue: 'bg-[var(--accent-subtle)] text-[var(--accent)] border-blue-200',
+    green: 'bg-[var(--success-bg)] text-[var(--success)] border-green-200',
+    yellow: 'bg-[var(--warning-bg)] text-[var(--warning)] border-amber-200',
+    red: 'bg-[var(--danger-bg)] text-[var(--danger)] border-red-200',
+    gray: 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border)]',
+    purple: 'bg-purple-50 text-purple-700 border-purple-200',
+    orange: 'bg-orange-50 text-orange-700 border-orange-200',
   };
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${variants[variant]} ${className}`}>
@@ -73,24 +64,23 @@ interface ModalProps { open: boolean; onClose: () => void; title: string; childr
 export function Modal({ open, onClose, title, children, size = 'md' }: ModalProps) {
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
   }, [open, onClose]);
-
   if (!open) return null;
   const widths = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative w-full ${widths[size]} bg-[#111118] border border-[#1E1E2E] rounded-2xl shadow-2xl`}>
-        <div className="flex items-center justify-between p-5 border-b border-[#1E1E2E]">
-          <h2 className="text-base font-semibold text-slate-100">{title}</h2>
-          <button onClick={onClose} className="p-1.5 hover:bg-[#1E1E2E] rounded-lg transition-colors text-slate-400 hover:text-white cursor-pointer">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className={`relative w-full ${widths[size]} bg-white border border-[var(--border)] rounded-2xl animate-slide-up`} style={{ boxShadow: 'var(--shadow-lg)' }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+          <h2 className="text-base font-semibold text-[var(--text-primary)]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 hover:bg-[var(--bg-hover)] rounded-lg transition-colors text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="p-5">{children}</div>
+        <div className="px-6 py-5">{children}</div>
       </div>
     </div>
   );
@@ -101,82 +91,76 @@ interface DrawerProps { open: boolean; onClose: () => void; title: string; child
 export function Drawer({ open, onClose, title, children, width = 'w-[480px]' }: DrawerProps) {
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
   }, [open, onClose]);
-
   return (
-    <div className={`fixed inset-0 z-40 flex justify-end transition-all duration-300 ${open ? 'visible' : 'invisible'}`}>
-      <div className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`} onClick={onClose} />
-      <div className={`relative ${width} max-w-full bg-[#111118] border-l border-[#1E1E2E] h-full flex flex-col shadow-2xl transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex items-center justify-between p-5 border-b border-[#1E1E2E] flex-shrink-0">
-          <h2 className="text-base font-semibold text-slate-100">{title}</h2>
-          <button onClick={onClose} className="p-1.5 hover:bg-[#1E1E2E] rounded-lg transition-colors text-slate-400 hover:text-white cursor-pointer">
+    <div className={`fixed inset-0 z-40 flex justify-end transition-all duration-200 ${open ? 'visible' : 'invisible'}`}>
+      <div className={`absolute inset-0 bg-black/30 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0'}`} onClick={onClose} />
+      <div className={`relative ${width} max-w-full bg-white border-l border-[var(--border)] h-full flex flex-col transition-transform duration-200 ${open ? 'translate-x-0' : 'translate-x-full'}`} style={{ boxShadow: 'var(--shadow-lg)' }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)] flex-shrink-0">
+          <h2 className="text-base font-semibold text-[var(--text-primary)]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 hover:bg-[var(--bg-hover)] rounded-lg transition-colors text-[var(--text-muted)] cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-5">{children}</div>
+        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
       </div>
     </div>
   );
 }
 
 // ─── Input ────────────────────────────────────────────────────────────────────
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string; error?: string; icon?: React.ReactNode;
-}
-export function Input({ label, error, icon, className = '', ...props }: InputProps) {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> { label?: string; error?: string; icon?: React.ReactNode; hint?: string; }
+export function Input({ label, error, icon, hint, className = '', ...props }: InputProps) {
   return (
     <div className="space-y-1">
-      {label && <label className="text-sm text-slate-300 font-medium">{label}</label>}
+      {label && <label className="text-sm font-medium text-[var(--text-primary)]">{label}</label>}
       <div className="relative">
-        {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>}
+        {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">{icon}</div>}
         <input
-          className={`w-full bg-[#0A0A0F] border ${error ? 'border-red-500' : 'border-[#1E1E2E]'} rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-600 transition-colors ${icon ? 'pl-9' : ''} ${className}`}
+          className={`w-full bg-white border ${error ? 'border-[var(--danger)]' : 'border-[var(--border)]'} rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-0 focus:border-[var(--accent)] transition-all ${icon ? 'pl-9' : ''} ${className}`}
           {...props}
         />
       </div>
-      {error && <p className="text-xs text-red-400 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{error}</p>}
+      {hint && !error && <p className="text-xs text-[var(--text-muted)]">{hint}</p>}
+      {error && <p className="text-xs text-[var(--danger)] flex items-center gap-1"><AlertCircle className="w-3 h-3" />{error}</p>}
     </div>
   );
 }
 
 // ─── Select ───────────────────────────────────────────────────────────────────
-interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string; error?: string; options: { value: string; label: string }[];
-}
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> { label?: string; error?: string; options: { value: string; label: string }[]; }
 export function Select({ label, error, options, className = '', ...props }: SelectProps) {
   return (
     <div className="space-y-1">
-      {label && <label className="text-sm text-slate-300 font-medium">{label}</label>}
+      {label && <label className="text-sm font-medium text-[var(--text-primary)]">{label}</label>}
       <div className="relative">
         <select
-          className={`w-full bg-[#0A0A0F] border ${error ? 'border-red-500' : 'border-[#1E1E2E]'} rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-600 transition-colors appearance-none pr-8 ${className}`}
+          className={`w-full bg-white border ${error ? 'border-[var(--danger)]' : 'border-[var(--border)]'} rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all appearance-none pr-8 ${className}`}
           {...props}
         >
           {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
-        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)] pointer-events-none" />
       </div>
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
     </div>
   );
 }
 
 // ─── Textarea ─────────────────────────────────────────────────────────────────
-interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string; error?: string;
-}
+interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> { label?: string; error?: string; }
 export function Textarea({ label, error, className = '', ...props }: TextareaProps) {
   return (
     <div className="space-y-1">
-      {label && <label className="text-sm text-slate-300 font-medium">{label}</label>}
+      {label && <label className="text-sm font-medium text-[var(--text-primary)]">{label}</label>}
       <textarea
-        className={`w-full bg-[#0A0A0F] border ${error ? 'border-red-500' : 'border-[#1E1E2E]'} rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-600 transition-colors resize-none ${className}`}
+        className={`w-full bg-white border ${error ? 'border-[var(--danger)]' : 'border-[var(--border)]'} rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all resize-none ${className}`}
         {...props}
       />
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
     </div>
   );
 }
@@ -185,12 +169,16 @@ export function Textarea({ label, error, className = '', ...props }: TextareaPro
 interface TabsProps { tabs: { id: string; label: string; icon?: React.ReactNode }[]; active: string; onChange: (id: string) => void; }
 export function Tabs({ tabs, active, onChange }: TabsProps) {
   return (
-    <div className="flex gap-1 bg-[#0A0A0F] rounded-lg p-1 border border-[#1E1E2E]">
+    <div className="flex border-b border-[var(--border)]">
       {tabs.map(tab => (
         <button
           key={tab.id}
           onClick={() => onChange(tab.id)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-150 cursor-pointer ${active === tab.id ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-[#1E1E2E]'}`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all duration-150 cursor-pointer border-b-2 -mb-px ${
+            active === tab.id
+              ? 'border-[var(--accent)] text-[var(--accent)]'
+              : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+          }`}
         >
           {tab.icon}
           {tab.label}
@@ -207,7 +195,6 @@ export function showToast(message: string, type: Toast['type'] = 'success') {
   const t: Toast = { id: Math.random().toString(36), message, type };
   toastListeners.forEach(fn => fn(t));
 }
-
 export function ToastContainer() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   useEffect(() => {
@@ -221,10 +208,11 @@ export function ToastContainer() {
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
       {toasts.map(t => (
-        <div key={t.id} className={`flex items-center gap-2 px-4 py-3 rounded-xl border shadow-xl text-sm font-medium animate-slide-in
-          ${t.type === 'success' ? 'bg-emerald-900/80 border-emerald-700 text-emerald-200' :
-            t.type === 'error' ? 'bg-red-900/80 border-red-700 text-red-200' :
-            'bg-blue-900/80 border-blue-700 text-blue-200'}`}>
+        <div key={t.id} className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-medium animate-slide-up ${
+          t.type === 'success' ? 'bg-[var(--success-bg)] border-green-200 text-[var(--success)]' :
+          t.type === 'error' ? 'bg-[var(--danger-bg)] border-red-200 text-[var(--danger)]' :
+          'bg-[var(--accent-subtle)] border-blue-200 text-[var(--accent)]'
+        }`} style={{ boxShadow: 'var(--shadow-md)' }}>
           {t.type === 'success' ? <Check className="w-4 h-4" /> : t.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <Info className="w-4 h-4" />}
           {t.message}
         </div>
@@ -236,28 +224,28 @@ export function ToastContainer() {
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 interface StatCardProps { label: string; value: string | number; sub?: string; icon?: React.ReactNode; trend?: number; color?: string; onClick?: () => void; }
 export function StatCard({ label, value, sub, icon, trend, color = 'blue', onClick }: StatCardProps) {
-  const colors: Record<string, string> = {
-    blue: 'text-blue-400 bg-blue-900/20',
-    green: 'text-emerald-400 bg-emerald-900/20',
-    yellow: 'text-yellow-400 bg-yellow-900/20',
-    red: 'text-red-400 bg-red-900/20',
-    purple: 'text-purple-400 bg-purple-900/20',
+  const iconColors: Record<string, string> = {
+    blue: 'text-[var(--accent)] bg-[var(--accent-subtle)]',
+    green: 'text-[var(--success)] bg-[var(--success-bg)]',
+    yellow: 'text-[var(--warning)] bg-[var(--warning-bg)]',
+    red: 'text-[var(--danger)] bg-[var(--danger-bg)]',
+    purple: 'text-purple-600 bg-purple-50',
   };
   return (
-    <Card className={`p-4 ${onClick ? 'cursor-pointer hover:border-blue-600/40 transition-colors' : ''}`} onClick={onClick}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{label}</p>
-          <p className="text-2xl font-bold text-slate-100 font-mono mt-1">{value}</p>
-          {sub && <p className="text-xs text-slate-500 mt-1">{sub}</p>}
+    <Card className={`p-4 ${onClick ? 'cursor-pointer' : ''}`} onClick={onClick}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide">{label}</p>
+          <p className="text-2xl font-semibold text-[var(--text-primary)] font-mono mt-1 tabular-nums">{value}</p>
+          {sub && <p className="text-xs text-[var(--text-muted)] mt-0.5">{sub}</p>}
           {trend !== undefined && (
-            <p className={`text-xs mt-1 font-medium ${trend >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}% this week
+            <p className={`text-xs mt-1 font-medium ${trend >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
+              {trend >= 0 ? '+' : ''}{trend}% this week
             </p>
           )}
         </div>
         {icon && (
-          <div className={`p-2.5 rounded-xl ${colors[color] || colors.blue}`}>
+          <div className={`p-2 rounded-lg flex-shrink-0 ${iconColors[color] || iconColors.blue}`}>
             {icon}
           </div>
         )}
@@ -268,12 +256,12 @@ export function StatCard({ label, value, sub, icon, trend, color = 'blue', onCli
 
 // ─── Progress Bar ─────────────────────────────────────────────────────────────
 interface ProgressBarProps { value: number; max?: number; color?: string; size?: 'sm' | 'md'; label?: string; }
-export function ProgressBar({ value, max = 100, color = 'bg-blue-600', size = 'md', label }: ProgressBarProps) {
+export function ProgressBar({ value, max = 100, color = 'bg-[var(--accent)]', size = 'md', label }: ProgressBarProps) {
   const pct = Math.min(100, Math.max(0, (value / max) * 100));
   return (
     <div className="space-y-1">
-      {label && <div className="flex justify-between text-xs text-slate-400"><span>{label}</span><span>{Math.round(pct)}%</span></div>}
-      <div className={`w-full bg-[#1E1E2E] rounded-full ${size === 'sm' ? 'h-1.5' : 'h-2'}`}>
+      {label && <div className="flex justify-between text-xs text-[var(--text-secondary)]"><span>{label}</span><span className="font-mono">{Math.round(pct)}%</span></div>}
+      <div className={`w-full bg-[var(--bg-hover)] rounded-full ${size === 'sm' ? 'h-1.5' : 'h-2'}`}>
         <div className={`${color} rounded-full transition-all duration-500 ${size === 'sm' ? 'h-1.5' : 'h-2'}`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -282,11 +270,13 @@ export function ProgressBar({ value, max = 100, color = 'bg-blue-600', size = 'm
 
 // ─── Score Badge ──────────────────────────────────────────────────────────────
 export function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 75 ? 'text-emerald-400 bg-emerald-900/20 border-emerald-800/30' :
-    score >= 50 ? 'text-yellow-400 bg-yellow-900/20 border-yellow-800/30' :
-    'text-red-400 bg-red-900/20 border-red-800/30';
+  const style = score >= 75
+    ? 'text-[var(--success)] bg-[var(--success-bg)] border-green-200'
+    : score >= 50
+    ? 'text-[var(--warning)] bg-[var(--warning-bg)] border-amber-200'
+    : 'text-[var(--danger)] bg-[var(--danger-bg)] border-red-200';
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border font-mono ${color}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border font-mono ${style}`}>
       {score}
     </span>
   );
@@ -297,9 +287,9 @@ interface EmptyStateProps { icon?: React.ReactNode; title: string; description?:
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      {icon && <div className="w-12 h-12 rounded-2xl bg-[#1E1E2E] flex items-center justify-center mb-4 text-slate-500">{icon}</div>}
-      <p className="text-slate-300 font-medium">{title}</p>
-      {description && <p className="text-slate-500 text-sm mt-1 max-w-xs">{description}</p>}
+      {icon && <div className="w-10 h-10 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] flex items-center justify-center mb-4 text-[var(--text-muted)]">{icon}</div>}
+      <p className="text-sm font-medium text-[var(--text-primary)]">{title}</p>
+      {description && <p className="text-sm text-[var(--text-muted)] mt-1 max-w-xs">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -310,7 +300,7 @@ interface ConfirmModalProps { open: boolean; onClose: () => void; onConfirm: () 
 export function ConfirmModal({ open, onClose, onConfirm, title, message, confirmLabel = 'Confirm', variant = 'primary' }: ConfirmModalProps) {
   return (
     <Modal open={open} onClose={onClose} title={title} size="sm">
-      <p className="text-sm text-slate-400 mb-5">{message}</p>
+      <p className="text-sm text-[var(--text-secondary)] mb-5">{message}</p>
       <div className="flex gap-3 justify-end">
         <Button variant="secondary" onClick={onClose}>Cancel</Button>
         <Button variant={variant === 'danger' ? 'danger' : 'primary'} onClick={() => { onConfirm(); onClose(); }}>{confirmLabel}</Button>
@@ -326,18 +316,18 @@ export function Dropdown({ trigger, items }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
   return (
     <div className="relative" ref={ref}>
       <div onClick={() => setOpen(o => !o)}>{trigger}</div>
       {open && (
-        <div className="absolute right-0 mt-1 w-48 bg-[#111118] border border-[#1E1E2E] rounded-xl shadow-2xl z-50 py-1 animate-fade-in">
+        <div className="absolute right-0 mt-1.5 w-48 bg-white border border-[var(--border)] rounded-xl py-1 z-50 animate-slide-up" style={{ boxShadow: 'var(--shadow-lg)' }}>
           {items.map((item, i) => (
             <button key={i} onClick={() => { item.onClick(); setOpen(false); }}
-              className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors cursor-pointer ${item.danger ? 'text-red-400 hover:bg-red-900/20' : 'text-slate-300 hover:bg-[#1E1E2E] hover:text-white'}`}>
+              className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-sm transition-colors cursor-pointer ${item.danger ? 'text-[var(--danger)] hover:bg-[var(--danger-bg)]' : 'text-[var(--text-primary)] hover:bg-[var(--bg-hover)]'}`}>
               {item.icon}
               {item.label}
             </button>

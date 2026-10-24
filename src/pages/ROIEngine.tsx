@@ -121,8 +121,8 @@ export default function ROIEngine() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-100">ROI Engine</h1>
-          <p className="text-sm text-slate-500 mt-0.5">FreshBrew QSR — Financial Model & Projections</p>
+          <h1 className="text-xl font-bold text-[var(--text-primary)]">ROI Engine</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-0.5">FreshBrew QSR — Financial Model & Projections</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="yellow">ILLUSTRATIVE MODEL</Badge>
@@ -134,18 +134,18 @@ export default function ROIEngine() {
 
       {/* Scenario Selector */}
       <Card className="p-4">
-        <p className="text-xs text-slate-500 mb-3 font-medium uppercase tracking-wide">Revenue Scenarios</p>
+        <p className="text-xs text-[var(--text-muted)] mb-3 font-medium uppercase tracking-wide">Revenue Scenarios</p>
         <div className="flex gap-3">
           {SCENARIOS.map((s, i) => (
             <button
               key={i}
               onClick={() => applyScenario(i)}
               className={`flex-1 p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                activeScenario === i ? 'border-blue-600 bg-blue-600/10 text-blue-300' : 'border-[#1E1E2E] text-slate-400 hover:border-slate-600'
+                activeScenario === i ? 'border-blue-600 bg-blue-600/10 text-[var(--accent)]' : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-slate-600'
               }`}
             >
               <p className="text-sm font-semibold">{s.label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{formatCurrency(s.revenue)}/mo</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">{formatCurrency(s.revenue)}/mo</p>
             </button>
           ))}
         </div>
@@ -154,7 +154,7 @@ export default function ROIEngine() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Assumptions Panel */}
         <Card className="p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-200">Assumptions</h2>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">Assumptions</h2>
           <AsmpInput label="Initial Investment (₹)" value={assumptions.initialInvestment} onChange={v => updateField('initialInvestment', v)} step={50000} />
           <AsmpInput label="Monthly Revenue (₹)" value={assumptions.monthlyRevenue} onChange={v => updateField('monthlyRevenue', v)} step={50000} />
           <AsmpInput label="COGS %" value={assumptions.cogsPercent} onChange={v => updateField('cogsPercent', v)} step={1} min={0} max={80} isPercent />
@@ -178,7 +178,7 @@ export default function ROIEngine() {
 
           {/* Cost Breakdown */}
           <Card className="p-4">
-            <h3 className="text-sm font-semibold text-slate-200 mb-3">Monthly Cost Breakdown</h3>
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Monthly Cost Breakdown</h3>
             <div className="space-y-2">
               {[
                 { label: 'COGS', value: fin.cogs, pct: assumptions.cogsPercent },
@@ -189,30 +189,30 @@ export default function ROIEngine() {
                 { label: 'Utilities', value: assumptions.utilities, pct: (assumptions.utilities / assumptions.monthlyRevenue) * 100 },
               ].map(row => (
                 <div key={row.label} className="flex items-center gap-3">
-                  <span className="text-xs text-slate-400 w-32 flex-shrink-0">{row.label}</span>
-                  <div className="flex-1 bg-[#1E1E2E] rounded-full h-1.5">
+                  <span className="text-xs text-[var(--text-secondary)] w-32 flex-shrink-0">{row.label}</span>
+                  <div className="flex-1 bg-[var(--bg-hover)] rounded-full h-1.5">
                     <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${Math.min(100, row.pct)}%` }} />
                   </div>
-                  <span className="text-xs text-slate-300 font-mono w-24 text-right">{formatCurrency(row.value)} ({row.pct.toFixed(1)}%)</span>
+                  <span className="text-xs text-[var(--text-secondary)] font-mono w-24 text-right">{formatCurrency(row.value)} ({row.pct.toFixed(1)}%)</span>
                 </div>
               ))}
-              <div className="flex items-center gap-3 pt-2 border-t border-[#1E1E2E]">
-                <span className="text-xs font-medium text-slate-300 w-32">Operating Profit</span>
+              <div className="flex items-center gap-3 pt-2 border-t border-[var(--border)]">
+                <span className="text-xs font-medium text-[var(--text-secondary)] w-32">Operating Profit</span>
                 <div className="flex-1" />
-                <span className={`text-sm font-bold font-mono ${fin.opProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(fin.opProfit)}</span>
+                <span className={`text-sm font-bold font-mono ${fin.opProfit >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>{formatCurrency(fin.opProfit)}</span>
               </div>
             </div>
           </Card>
 
           {/* Monthly Chart */}
           <Card className="p-4">
-            <h3 className="text-sm font-semibold text-slate-200 mb-3">12-Month Revenue & Profit</h3>
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">12-Month Revenue & Profit</h3>
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={projection} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E1E2E" />
-                <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94A3B8' }} />
-                <YAxis tick={{ fontSize: 10, fill: '#94A3B8' }} tickFormatter={v => `₹${(v / 100000).toFixed(0)}L`} />
-                <Tooltip contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 11 }}
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} />
+                <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} tickFormatter={v => `₹${(v / 100000).toFixed(0)}L`} />
+                <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 11 }}
                   formatter={(v: unknown) => formatCurrency(v as number)} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Line type="monotone" dataKey="revenue" stroke="#2563EB" dot={false} name="Revenue" strokeWidth={2} />
@@ -226,21 +226,21 @@ export default function ROIEngine() {
 
       {/* 3-Year Projection Table */}
       <Card className="p-5">
-        <h2 className="text-sm font-semibold text-slate-200 mb-4">3-Year Projection Summary</h2>
+        <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">3-Year Projection Summary</h2>
         <div className="grid grid-cols-3 gap-4 mb-4">
           {yearlyData.map(y => (
-            <div key={y.year} className="bg-[#0A0A0F] border border-[#1E1E2E] rounded-xl p-4 text-center">
-              <p className="text-xs text-slate-500 font-medium">{y.year}</p>
-              <p className="text-xl font-bold text-slate-100 font-mono mt-1">{formatCurrency(y.revenue)}</p>
-              <p className={`text-sm font-medium mt-1 ${y.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(y.profit)} profit</p>
+            <div key={y.year} className="bg-[var(--bg-app)] border border-[var(--border)] rounded-xl p-4 text-center">
+              <p className="text-xs text-[var(--text-muted)] font-medium">{y.year}</p>
+              <p className="text-xl font-bold text-[var(--text-primary)] font-mono mt-1">{formatCurrency(y.revenue)}</p>
+              <p className={`text-sm font-medium mt-1 ${y.profit >= 0 ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>{formatCurrency(y.profit)} profit</p>
             </div>
           ))}
         </div>
         <ResponsiveContainer width="100%" height={150}>
           <BarChart data={yearlyData}>
-            <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#94A3B8' }} />
-            <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} tickFormatter={v => `₹${(v / 100000).toFixed(0)}L`} />
-            <Tooltip contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 11 }} formatter={(v: unknown) => formatCurrency(v as number)} />
+            <XAxis dataKey="year" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+            <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={v => `₹${(v / 100000).toFixed(0)}L`} />
+            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 11 }} formatter={(v: unknown) => formatCurrency(v as number)} />
             <Bar dataKey="revenue" fill="#2563EB" radius={[4, 4, 0, 0]} name="Revenue" />
             <Bar dataKey="profit" fill="#10B981" radius={[4, 4, 0, 0]} name="Profit" />
           </BarChart>
@@ -249,12 +249,12 @@ export default function ROIEngine() {
 
       {/* Sensitivity Table */}
       <Card className="p-5">
-        <h2 className="text-sm font-semibold text-slate-200 mb-4">Scenario Comparison</h2>
+        <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Scenario Comparison</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-[#1E1E2E]">
+            <thead><tr className="border-b border-[var(--border)]">
               {['Metric', ...SCENARIOS.map(s => s.label)].map(h => (
-                <th key={h} className="text-left py-2 px-3 text-slate-400 font-medium text-xs">{h}</th>
+                <th key={h} className="text-left py-2 px-3 text-[var(--text-secondary)] font-medium text-xs">{h}</th>
               ))}
             </tr></thead>
             <tbody>
@@ -265,10 +265,10 @@ export default function ROIEngine() {
                 { label: 'Break-even', fn: (r: number) => { const f = calcFinancials({ ...assumptions, monthlyRevenue: r }); const be = isFinite(f.breakeven) ? `${Math.ceil(f.breakeven)}mo` : 'N/A'; return be; } },
                 { label: 'Year 1 Revenue', fn: (r: number) => formatCurrency(r * 12) },
               ].map(row => (
-                <tr key={row.label} className="border-b border-[#1E1E2E]/50">
-                  <td className="py-2 px-3 text-slate-400 text-xs">{row.label}</td>
+                <tr key={row.label} className="border-b border-[var(--border)]/50">
+                  <td className="py-2 px-3 text-[var(--text-secondary)] text-xs">{row.label}</td>
                   {SCENARIOS.map((s, i) => (
-                    <td key={i} className={`py-2 px-3 font-mono text-sm ${i === 1 ? 'text-blue-400 font-medium' : 'text-slate-300'}`}>{row.fn(s.revenue)}</td>
+                    <td key={i} className={`py-2 px-3 font-mono text-sm ${i === 1 ? 'text-[var(--accent)] font-medium' : 'text-[var(--text-secondary)]'}`}>{row.fn(s.revenue)}</td>
                   ))}
                 </tr>
               ))}
@@ -279,9 +279,9 @@ export default function ROIEngine() {
 
       {/* Benchmarks */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InsightCard icon={<TrendingUp className="w-4 h-4 text-blue-400" />} title="Opportunity" content="QSR sector growing at 18% YoY. FreshBrew targets high-footfall locations in Tier 1-2 cities." color="blue" />
-        <InsightCard icon={<AlertCircle className="w-4 h-4 text-yellow-400" />} title="Risk" content="Break-even assumes consistent 15% YoY growth. Actual performance may vary with location, competition, and seasonality." color="yellow" />
-        <InsightCard icon={<Info className="w-4 h-4 text-slate-400" />} title="India Benchmark" content="Illustrative: India QSR avg break-even 24-36mo. US: 12-18mo. Data for illustrative comparison only." color="gray" />
+        <InsightCard icon={<TrendingUp className="w-4 h-4 text-[var(--accent)]" />} title="Opportunity" content="QSR sector growing at 18% YoY. FreshBrew targets high-footfall locations in Tier 1-2 cities." color="blue" />
+        <InsightCard icon={<AlertCircle className="w-4 h-4 text-[var(--warning)]" />} title="Risk" content="Break-even assumes consistent 15% YoY growth. Actual performance may vary with location, competition, and seasonality." color="yellow" />
+        <InsightCard icon={<Info className="w-4 h-4 text-[var(--text-secondary)]" />} title="India Benchmark" content="Illustrative: India QSR avg break-even 24-36mo. US: 12-18mo. Data for illustrative comparison only." color="gray" />
       </div>
     </div>
   );
@@ -292,36 +292,36 @@ function AsmpInput({ label, value, onChange, step = 1, min, max, isPercent }: {
 }) {
   return (
     <div className="flex items-center justify-between gap-2">
-      <label className="text-xs text-slate-400 flex-1">{label}</label>
+      <label className="text-xs text-[var(--text-secondary)] flex-1">{label}</label>
       <div className="flex items-center gap-1">
         <input
           type="number" value={value} step={step} min={min ?? 0} max={max}
           onChange={e => onChange(parseFloat(e.target.value) || 0)}
-          className="w-24 bg-[#0A0A0F] border border-[#1E1E2E] rounded px-2 py-1 text-xs text-right text-slate-100 focus:outline-none focus:border-blue-600 font-mono"
+          className="w-24 bg-[var(--bg-app)] border border-[var(--border)] rounded px-2 py-1 text-xs text-right text-[var(--text-primary)] focus:outline-none focus:border-blue-600 font-mono"
         />
-        {isPercent && <span className="text-xs text-slate-500">%</span>}
+        {isPercent && <span className="text-xs text-[var(--text-muted)]">%</span>}
       </div>
     </div>
   );
 }
 
 function MetricCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
-  const colors: Record<string, string> = { green: 'text-emerald-400', red: 'text-red-400', yellow: 'text-yellow-400', blue: 'text-blue-400' };
+  const colors: Record<string, string> = { green: 'text-[var(--success)]', red: 'text-[var(--danger)]', yellow: 'text-[var(--warning)]', blue: 'text-[var(--accent)]' };
   return (
     <Card className="p-3 text-center">
-      <p className="text-xs text-slate-500 font-medium">{label}</p>
-      <p className={`text-lg font-bold font-mono mt-1 ${colors[color] || 'text-slate-100'}`}>{value}</p>
-      <p className="text-xs text-slate-600 mt-0.5">{sub}</p>
+      <p className="text-xs text-[var(--text-muted)] font-medium">{label}</p>
+      <p className={`text-lg font-bold font-mono mt-1 ${colors[color] || 'text-[var(--text-primary)]'}`}>{value}</p>
+      <p className="text-xs text-[var(--text-muted)] mt-0.5">{sub}</p>
     </Card>
   );
 }
 
 function InsightCard({ icon, title, content, color }: { icon: React.ReactNode; title: string; content: string; color: string }) {
-  const borders: Record<string, string> = { blue: 'border-blue-800/30', yellow: 'border-yellow-800/30', gray: 'border-[#1E1E2E]' };
+  const borders: Record<string, string> = { blue: 'border-blue-800/30', yellow: 'border-yellow-800/30', gray: 'border-[var(--border)]' };
   return (
     <Card className={`p-4 border ${borders[color] || borders.gray}`}>
-      <div className="flex items-center gap-2 mb-2">{icon}<p className="text-sm font-medium text-slate-200">{title}</p></div>
-      <p className="text-xs text-slate-500 leading-relaxed">{content}</p>
+      <div className="flex items-center gap-2 mb-2">{icon}<p className="text-sm font-medium text-[var(--text-primary)]">{title}</p></div>
+      <p className="text-xs text-[var(--text-muted)] leading-relaxed">{content}</p>
     </Card>
   );
 }

@@ -58,8 +58,8 @@ export default function CommandCenter() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-100">Command Center</h1>
-          <p className="text-sm text-slate-500 mt-0.5">FreshBrew QSR — Franchise Operations Overview</p>
+          <h1 className="text-xl font-bold text-[var(--text-primary)]">Command Center</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-0.5">FreshBrew QSR — Franchise Operations Overview</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="green"><span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1" />Live</Badge>
@@ -82,17 +82,17 @@ export default function CommandCenter() {
         {/* Lead Funnel */}
         <Card className="lg:col-span-2 p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-200">Lead Funnel</h2>
-            <button onClick={() => navigate('/crm')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View CRM →</button>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Lead Funnel</h2>
+            <button onClick={() => navigate('/crm')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View CRM →</button>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={funnelData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-              <XAxis dataKey="stage" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="stage" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
               <Tooltip
-                contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 12 }}
-                labelStyle={{ color: '#F8FAFC' }}
-                itemStyle={{ color: '#94A3B8' }}
+                contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 12 }}
+                labelStyle={{ color: 'var(--text-primary)' }}
+                itemStyle={{ color: 'var(--text-secondary)' }}
               />
               <Bar dataKey="count" fill="#2563EB" radius={[4, 4, 0, 0]} />
             </BarChart>
@@ -101,19 +101,19 @@ export default function CommandCenter() {
 
         {/* Readiness Score */}
         <Card className="p-5">
-          <h2 className="text-sm font-semibold text-slate-200 mb-4">Brand Readiness</h2>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Brand Readiness</h2>
           <div className="flex flex-col items-center">
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie data={readinessData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
                   <Cell fill="#2563EB" />
-                  <Cell fill="#1E1E2E" />
+                  <Cell fill="var(--border)" />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
             <div className="text-center -mt-4">
-              <p className="text-3xl font-bold text-slate-100 font-mono">78</p>
-              <p className="text-xs text-slate-500">AI Readiness Score</p>
+              <p className="text-3xl font-bold text-[var(--text-primary)] font-mono">78</p>
+              <p className="text-xs text-[var(--text-muted)]">AI Readiness Score</p>
               <Badge variant="green" className="mt-2">AMBER → GREEN</Badge>
             </div>
           </div>
@@ -125,30 +125,30 @@ export default function CommandCenter() {
         {/* Recent Conversations */}
         <Card className="lg:col-span-2 p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-200">Recent Conversations</h2>
-            <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View all →</button>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Recent Conversations</h2>
+            <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View all →</button>
           </div>
           <div className="space-y-2">
             {recentConvs.map(conv => (
               <div
                 key={conv.id}
                 onClick={() => navigate('/agents/whatsapp')}
-                className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[#1E1E2E] cursor-pointer transition-colors"
+                className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[var(--bg-hover)] cursor-pointer transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)] flex-shrink-0">
                   {conv.leadName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-slate-200">{conv.leadName}</span>
+                    <span className="text-sm font-medium text-[var(--text-primary)]">{conv.leadName}</span>
                     <StatusBadge status={conv.status} />
                     {conv.unreadCount > 0 && (
-                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-blue-600 text-white text-xs rounded-full">{conv.unreadCount}</span>
+                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-blue-600 text-[var(--text-primary)] text-xs rounded-full">{conv.unreadCount}</span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                  <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">{conv.lastMessage}</p>
                 </div>
-                <span className="text-xs text-slate-600 flex-shrink-0">{formatDistanceToNow(conv.lastMessageAt)}</span>
+                <span className="text-xs text-[var(--text-muted)] flex-shrink-0">{formatDistanceToNow(conv.lastMessageAt)}</span>
               </div>
             ))}
           </div>
@@ -156,14 +156,14 @@ export default function CommandCenter() {
 
         {/* Activity Feed */}
         <Card className="p-5">
-          <h2 className="text-sm font-semibold text-slate-200 mb-4">Recent Activity</h2>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Recent Activity</h2>
           <div className="space-y-3">
             {recentEvents.map(event => (
               <div key={event.id} className="flex items-start gap-2.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-300 leading-relaxed">{event.description}</p>
-                  <p className="text-xs text-slate-600 mt-0.5">{formatDistanceToNow(event.timestamp)}</p>
+                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{event.description}</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-0.5">{formatDistanceToNow(event.timestamp)}</p>
                 </div>
               </div>
             ))}
@@ -174,34 +174,34 @@ export default function CommandCenter() {
       {/* Automation Performance */}
       <Card className="p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-slate-200">Automation Performance</h2>
-          <button onClick={() => navigate('/automations')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View details →</button>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">Automation Performance</h2>
+          <button onClick={() => navigate('/automations')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View details →</button>
         </div>
         <ResponsiveContainer width="100%" height={120}>
           <BarChart data={autoData} layout="vertical" margin={{ top: 0, right: 20, left: 60, bottom: 0 }}>
-            <XAxis type="number" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 12 }} />
+            <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 12 }} />
             <Bar dataKey="handled" fill="#2563EB" radius={[0, 4, 4, 0]} name="AI Handled" />
             <Bar dataKey="escalated" fill="#F59E0B" radius={[0, 4, 4, 0]} name="Escalated" />
           </BarChart>
         </ResponsiveContainer>
-        <div className="flex gap-6 mt-3 pt-3 border-t border-[#1E1E2E]">
+        <div className="flex gap-6 mt-3 pt-3 border-t border-[var(--border)]">
           <div className="text-center">
-            <p className="text-xl font-bold text-slate-100 font-mono">45m</p>
-            <p className="text-xs text-slate-500">Avg time saved/lead</p>
+            <p className="text-xl font-bold text-[var(--text-primary)] font-mono">45m</p>
+            <p className="text-xs text-[var(--text-muted)]">Avg time saved/lead</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-slate-100 font-mono">109</p>
-            <p className="text-xs text-slate-500">Conversations handled</p>
+            <p className="text-xl font-bold text-[var(--text-primary)] font-mono">109</p>
+            <p className="text-xs text-[var(--text-muted)]">Conversations handled</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-slate-100 font-mono">82%</p>
-            <p className="text-xs text-slate-500">AI resolution rate</p>
+            <p className="text-xl font-bold text-[var(--text-primary)] font-mono">82%</p>
+            <p className="text-xs text-[var(--text-muted)]">AI resolution rate</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-blue-400 font-mono">~81h</p>
-            <p className="text-xs text-slate-500">Total hours saved</p>
+            <p className="text-xl font-bold text-[var(--accent)] font-mono">~81h</p>
+            <p className="text-xs text-[var(--text-muted)]">Total hours saved</p>
           </div>
         </div>
       </Card>

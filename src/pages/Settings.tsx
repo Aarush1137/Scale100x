@@ -22,8 +22,8 @@ export default function Settings() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-slate-100">Settings</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Configure workspace, agents, and integrations</p>
+        <h1 className="text-xl font-bold text-[var(--text-primary)]">Settings</h1>
+        <p className="text-sm text-[var(--text-muted)] mt-0.5">Configure workspace, agents, and integrations</p>
       </div>
 
       <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
@@ -31,18 +31,18 @@ export default function Settings() {
       {activeTab === 'workspace' && (
         <div className="space-y-4 max-w-xl">
           <Card className="p-5 space-y-4">
-            <h2 className="text-sm font-semibold text-slate-200">Workspace Settings</h2>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Workspace Settings</h2>
             <Input label="Workspace Name" value={wsName} onChange={e => setWsName(e.target.value)} />
             <div>
-              <label className="text-sm text-slate-300 font-medium">Default Brand</label>
-              <select className="mt-1 w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none">
+              <label className="text-sm text-[var(--text-secondary)] font-medium">Default Brand</label>
+              <select className="mt-1 w-full bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none">
                 {data.brands.map(b => <option key={b.id}>{b.name}</option>)}
               </select>
             </div>
-            <div className="flex items-center justify-between p-3 bg-[#0A0A0F] rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-[var(--bg-app)] rounded-lg">
               <div>
-                <p className="text-sm text-slate-300">Demo Mode</p>
-                <p className="text-xs text-slate-500">All data is stored in localStorage</p>
+                <p className="text-sm text-[var(--text-secondary)]">Demo Mode</p>
+                <p className="text-xs text-[var(--text-muted)]">All data is stored in localStorage</p>
               </div>
               <Badge variant="yellow">ENABLED</Badge>
             </div>
@@ -54,36 +54,36 @@ export default function Settings() {
       {activeTab === 'agents' && (
         <div className="space-y-4 max-w-2xl">
           <Card className="p-5 space-y-4">
-            <h2 className="text-sm font-semibold text-slate-200">Agent Configuration</h2>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Agent Configuration</h2>
             {data.agents.map(agent => (
-              <div key={agent.id} className="p-4 bg-[#0A0A0F] border border-[#1E1E2E] rounded-xl space-y-3">
+              <div key={agent.id} className="p-4 bg-[var(--bg-app)] border border-[var(--border)] rounded-xl space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-slate-200">{agent.name}</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)]">{agent.name}</p>
                   <Badge variant={agent.status === 'active' ? 'green' : 'yellow'}>{agent.status}</Badge>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-slate-500">Qualification Threshold</label>
+                    <label className="text-xs text-[var(--text-muted)]">Qualification Threshold</label>
                     <div className="flex items-center gap-2 mt-1">
                       <input type="range" min={0} max={100} value={agent.qualificationThreshold}
                         onChange={e => updateAgent(agent.id, { qualificationThreshold: parseInt(e.target.value) })}
                         className="flex-1" />
-                      <span className="text-xs text-slate-300 font-mono w-8">{agent.qualificationThreshold}</span>
+                      <span className="text-xs text-[var(--text-secondary)] font-mono w-8">{agent.qualificationThreshold}</span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500">Response Delay (sec)</label>
+                    <label className="text-xs text-[var(--text-muted)]">Response Delay (sec)</label>
                     <input type="number" min={0} max={300} value={agent.responseDelay}
                       onChange={e => updateAgent(agent.id, { responseDelay: parseInt(e.target.value) })}
-                      className="mt-1 w-full bg-[#111118] border border-[#1E1E2E] rounded px-2 py-1 text-xs text-slate-100 focus:outline-none" />
+                      className="mt-1 w-full bg-white border border-[var(--border)] rounded px-2 py-1 text-xs text-[var(--text-primary)] focus:outline-none" />
                   </div>
                 </div>
                 {agent.type === 'whatsapp' && (
                   <div>
-                    <label className="text-xs text-slate-500">Escalation Keywords</label>
+                    <label className="text-xs text-[var(--text-muted)]">Escalation Keywords</label>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {agent.escalationKeywords.map(kw => (
-                        <span key={kw} className="text-xs bg-red-900/20 text-red-300 border border-red-800/20 px-2 py-0.5 rounded">{kw}</span>
+                        <span key={kw} className="text-xs bg-red-900/20 text-[var(--danger)] border border-red-800/20 px-2 py-0.5 rounded">{kw}</span>
                       ))}
                     </div>
                   </div>
@@ -107,19 +107,19 @@ export default function Settings() {
             { name: 'Make.com (Automation)', desc: 'Workflow automation and webhooks', status: 'DEMO' },
           ].map(int => (
             <Card key={int.name} className="p-4 flex items-center gap-4">
-              <div className="w-8 h-8 rounded-lg bg-[#1E1E2E] flex items-center justify-center">
-                <Link className="w-4 h-4 text-slate-400" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--bg-hover)] flex items-center justify-center">
+                <Link className="w-4 h-4 text-[var(--text-secondary)]" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-200">{int.name}</p>
-                <p className="text-xs text-slate-500">{int.desc}</p>
+                <p className="text-sm font-medium text-[var(--text-primary)]">{int.name}</p>
+                <p className="text-xs text-[var(--text-muted)]">{int.desc}</p>
               </div>
               <Badge variant={int.status === 'NOT CONFIGURED' ? 'red' : 'yellow'}>{int.status}</Badge>
               <Button size="xs" variant="secondary" disabled={true}>Configure</Button>
             </Card>
           ))}
           <div className="p-3 bg-blue-900/10 border border-blue-800/20 rounded-lg">
-            <p className="text-xs text-blue-300">All integrations run in simulation mode. To connect live services, add API credentials via environment variables (see .env.example).</p>
+            <p className="text-xs text-[var(--accent)]">All integrations run in simulation mode. To connect live services, add API credentials via environment variables (see .env.example).</p>
           </div>
         </div>
       )}
@@ -127,26 +127,26 @@ export default function Settings() {
       {activeTab === 'events' && (
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-200">Audit Event Log</h2>
-            <span className="text-xs text-slate-500">{data.events.length} events</span>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Audit Event Log</h2>
+            <span className="text-xs text-[var(--text-muted)]">{data.events.length} events</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[#1E1E2E]">
-                  <th className="text-left py-2 px-3 text-slate-400">Time</th>
-                  <th className="text-left py-2 px-3 text-slate-400">Type</th>
-                  <th className="text-left py-2 px-3 text-slate-400">Description</th>
-                  <th className="text-left py-2 px-3 text-slate-400">Entity</th>
+                <tr className="border-b border-[var(--border)]">
+                  <th className="text-left py-2 px-3 text-[var(--text-secondary)]">Time</th>
+                  <th className="text-left py-2 px-3 text-[var(--text-secondary)]">Type</th>
+                  <th className="text-left py-2 px-3 text-[var(--text-secondary)]">Description</th>
+                  <th className="text-left py-2 px-3 text-[var(--text-secondary)]">Entity</th>
                 </tr>
               </thead>
               <tbody>
                 {[...data.events].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(event => (
-                  <tr key={event.id} className="border-b border-[#1E1E2E]/50">
-                    <td className="py-2 px-3 text-slate-500 whitespace-nowrap">{formatDateTime(event.timestamp)}</td>
+                  <tr key={event.id} className="border-b border-[var(--border)]/50">
+                    <td className="py-2 px-3 text-[var(--text-muted)] whitespace-nowrap">{formatDateTime(event.timestamp)}</td>
                     <td className="py-2 px-3"><Badge variant="gray">{event.type.replace(/_/g, ' ')}</Badge></td>
-                    <td className="py-2 px-3 text-slate-300">{event.description}</td>
-                    <td className="py-2 px-3 text-slate-500 font-mono">{event.entityType}</td>
+                    <td className="py-2 px-3 text-[var(--text-secondary)]">{event.description}</td>
+                    <td className="py-2 px-3 text-[var(--text-muted)] font-mono">{event.entityType}</td>
                   </tr>
                 ))}
               </tbody>
@@ -158,8 +158,8 @@ export default function Settings() {
       {activeTab === 'demo' && (
         <div className="space-y-4 max-w-lg">
           <Card className="p-5 space-y-3">
-            <h2 className="text-sm font-semibold text-slate-200">Demo Controls</h2>
-            <p className="text-xs text-slate-400">Manage demo data and reset the application to its initial seed state.</p>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Demo Controls</h2>
+            <p className="text-xs text-[var(--text-secondary)]">Manage demo data and reset the application to its initial seed state.</p>
 
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -170,16 +170,16 @@ export default function Settings() {
                 { label: 'Assets', count: data.assets.length },
                 { label: 'Events', count: data.events.length },
               ].map(stat => (
-                <div key={stat.label} className="flex items-center justify-between p-2 bg-[#0A0A0F] rounded-lg">
-                  <span className="text-xs text-slate-500">{stat.label}</span>
-                  <span className="text-sm font-bold font-mono text-slate-200">{stat.count}</span>
+                <div key={stat.label} className="flex items-center justify-between p-2 bg-[var(--bg-app)] rounded-lg">
+                  <span className="text-xs text-[var(--text-muted)]">{stat.label}</span>
+                  <span className="text-sm font-bold font-mono text-[var(--text-primary)]">{stat.count}</span>
                 </div>
               ))}
             </div>
 
             <div className="p-3 bg-red-900/10 border border-red-800/20 rounded-lg flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-red-300">Reset will delete all your changes and restore the original seed data. This cannot be undone.</p>
+              <AlertTriangle className="w-4 h-4 text-[var(--danger)] flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-[var(--danger)]">Reset will delete all your changes and restore the original seed data. This cannot be undone.</p>
             </div>
 
             <Button variant="danger" onClick={() => setResetConfirm(true)} className="gap-2">
@@ -188,13 +188,13 @@ export default function Settings() {
           </Card>
 
           <Card className="p-5">
-            <h3 className="text-sm font-semibold text-slate-200 mb-3">localStorage Usage</h3>
-            <p className="text-xs text-slate-400">
-              All application data is stored in browser localStorage under the key <code className="text-blue-400 font-mono">scale100x_data</code>.
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">localStorage Usage</h3>
+            <p className="text-xs text-[var(--text-secondary)]">
+              All application data is stored in browser localStorage under the key <code className="text-[var(--accent)] font-mono">scale100x_data</code>.
               No server, no database, no API calls in demo mode.
             </p>
-            <div className="mt-3 p-2 bg-[#0A0A0F] rounded-lg">
-              <p className="text-xs font-mono text-slate-300">~{Math.round(JSON.stringify(data).length / 1024)}KB used</p>
+            <div className="mt-3 p-2 bg-[var(--bg-app)] rounded-lg">
+              <p className="text-xs font-mono text-[var(--text-secondary)]">~{Math.round(JSON.stringify(data).length / 1024)}KB used</p>
             </div>
           </Card>
         </div>

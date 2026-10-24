@@ -167,17 +167,17 @@ export default function WhatsAppWorkspace() {
   return (
     <div className="flex h-[calc(100vh-57px)] overflow-hidden">
       {/* Left: Conversation List */}
-      <div className="w-72 flex-shrink-0 border-r border-[#1E1E2E] flex flex-col">
-        <div className="p-3 border-b border-[#1E1E2E] space-y-2">
+      <div className="w-72 flex-shrink-0 border-r border-[var(--border)] flex flex-col">
+        <div className="p-3 border-b border-[var(--border)] space-y-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-slate-100 flex-1">WhatsApp</h2>
+            <h2 className="text-sm font-semibold text-[var(--text-primary)] flex-1">WhatsApp</h2>
             <Badge variant="yellow">DEMO</Badge>
           </div>
           <Input placeholder="Search conversations..." value={search} onChange={e => setSearch(e.target.value)} icon={<Search className="w-3.5 h-3.5" />} />
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none"
+            className="w-full bg-[var(--bg-app)] border border-[var(--border)] rounded-lg px-2 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none"
           >
             <option value="">All Status</option>
             <option>AI Active</option>
@@ -191,22 +191,22 @@ export default function WhatsAppWorkspace() {
             <div
               key={conv.id}
               onClick={() => setSelectedConvId(conv.id)}
-              className={`p-3 border-b border-[#1E1E2E]/50 cursor-pointer transition-colors ${selectedConvId === conv.id ? 'bg-blue-600/10 border-l-2 border-l-blue-600' : 'hover:bg-[#1E1E2E]'}`}
+              className={`p-3 border-b border-[var(--border)]/50 cursor-pointer transition-colors ${selectedConvId === conv.id ? 'bg-[var(--accent-subtle)] border-l-2 border-l-[var(--accent)]' : 'hover:bg-[var(--bg-hover)]'}`}
             >
               <div className="flex items-start gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)] flex-shrink-0">
                   {conv.leadName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-200">{conv.leadName}</span>
-                    <span className="text-xs text-slate-600">{formatDistanceToNow(conv.lastMessageAt)}</span>
+                    <span className="text-xs font-medium text-[var(--text-primary)]">{conv.leadName}</span>
+                    <span className="text-xs text-[var(--text-muted)]">{formatDistanceToNow(conv.lastMessageAt)}</span>
                   </div>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                  <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">{conv.lastMessage}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <StatusDot status={conv.status} />
                     {conv.unreadCount > 0 && (
-                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-blue-600 text-white text-xs rounded-full">{conv.unreadCount}</span>
+                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-[var(--accent)] text-white text-xs rounded-full">{conv.unreadCount}</span>
                     )}
                   </div>
                 </div>
@@ -221,15 +221,15 @@ export default function WhatsAppWorkspace() {
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="flex items-center gap-3 p-3 border-b border-[#1E1E2E] flex-shrink-0">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
+            <div className="flex items-center gap-3 p-3 border-b border-[var(--border)] flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-sm font-bold text-[var(--text-primary)]">
                 {selectedConv.leadName[0]}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-slate-100">{selectedConv.leadName}</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">{selectedConv.leadName}</p>
                 <div className="flex items-center gap-2">
                   <StatusDot status={selectedConv.status} />
-                  <span className="text-xs text-slate-500">{selectedConv.phone}</span>
+                  <span className="text-xs text-[var(--text-muted)]">{selectedConv.phone}</span>
                   <Badge variant="gray">{selectedConv.intentLabel}</Badge>
                 </div>
               </div>
@@ -250,9 +250,9 @@ export default function WhatsAppWorkspace() {
             {/* Escalation Banner */}
             {selectedConv.escalationReason && (
               <div className="flex items-center gap-2 px-4 py-2 bg-yellow-900/20 border-b border-yellow-800/30">
-                <AlertTriangle className="w-3.5 h-3.5 text-yellow-400" />
+                <AlertTriangle className="w-3.5 h-3.5 text-[var(--warning)]" />
                 <span className="text-xs text-yellow-300">Escalated: {selectedConv.escalationReason}</span>
-                {selectedConv.assignedTo && <span className="text-xs text-yellow-400 ml-1">→ {selectedConv.assignedTo}</span>}
+                {selectedConv.assignedTo && <span className="text-xs text-[var(--warning)] ml-1">→ {selectedConv.assignedTo}</span>}
               </div>
             )}
 
@@ -265,10 +265,10 @@ export default function WhatsAppWorkspace() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-[#1E1E2E] p-3 flex-shrink-0">
+            <div className="border-t border-[var(--border)] p-3 flex-shrink-0">
               {selectedConv.status === 'Resolved' ? (
-                <div className="flex items-center justify-center gap-2 py-2 text-sm text-slate-500">
-                  <CheckCircle className="w-4 h-4 text-emerald-400" /> Conversation resolved
+                <div className="flex items-center justify-center gap-2 py-2 text-sm text-[var(--text-muted)]">
+                  <CheckCircle className="w-4 h-4 text-[var(--success)]" /> Conversation resolved
                 </div>
               ) : (
                 <div className="flex gap-2">
@@ -277,7 +277,7 @@ export default function WhatsAppWorkspace() {
                     onChange={e => setMessageText(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                     placeholder={selectedConv.status === 'AI Active' ? 'Type a message (AI will also respond)...' : 'Type a message...'}
-                    className="flex-1 bg-[#0A0A0F] border border-[#1E1E2E] rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-600 resize-none"
+                    className="flex-1 bg-[var(--bg-app)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-blue-600 resize-none"
                     rows={2}
                   />
                   <Button onClick={handleSend} disabled={!messageText.trim()} className="gap-1 self-end">
@@ -287,12 +287,12 @@ export default function WhatsAppWorkspace() {
               )}
               <div className="flex items-center gap-2 mt-2">
                 {selectedConv.status === 'AI Active' && (
-                  <div className="flex items-center gap-1 text-xs text-blue-400">
+                  <div className="flex items-center gap-1 text-xs text-[var(--accent)]">
                     <Bot className="w-3 h-3" /> AI responding automatically
                   </div>
                 )}
                 {(selectedConv.status === 'Human Active' || selectedConv.status === 'Escalated') && (
-                  <div className="flex items-center gap-1 text-xs text-yellow-400">
+                  <div className="flex items-center gap-1 text-xs text-[var(--warning)]">
                     <UserCheck className="w-3 h-3" /> Human active — AI paused
                   </div>
                 )}
@@ -301,21 +301,21 @@ export default function WhatsAppWorkspace() {
           </div>
 
           {/* Qualification Panel */}
-          <div className="w-56 flex-shrink-0 border-l border-[#1E1E2E] overflow-y-auto p-3 space-y-3">
-            <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">Qualification</p>
+          <div className="w-56 flex-shrink-0 border-l border-[var(--border)] overflow-y-auto p-3 space-y-3">
+            <p className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Qualification</p>
             <div className="text-center">
               <p className={`text-3xl font-bold font-mono ${intentColor(selectedConv.intentScore)}`}>{selectedConv.intentScore}</p>
-              <p className="text-xs text-slate-500">Intent Score</p>
+              <p className="text-xs text-[var(--text-muted)]">Intent Score</p>
             </div>
             {Object.entries(selectedConv.qualification).filter(([k]) => k !== 'intentScore').map(([key, val]) => (
               <div key={key} className="flex flex-col">
-                <span className="text-xs text-slate-500 capitalize">{key}</span>
-                <span className="text-xs text-slate-200 font-medium">{String(val) || '—'}</span>
+                <span className="text-xs text-[var(--text-muted)] capitalize">{key}</span>
+                <span className="text-xs text-[var(--text-primary)] font-medium">{String(val) || '—'}</span>
               </div>
             ))}
 
-            <div className="border-t border-[#1E1E2E] pt-3">
-              <p className="text-xs font-medium text-slate-400 mb-2">Internal Notes</p>
+            <div className="border-t border-[var(--border)] pt-3">
+              <p className="text-xs font-medium text-[var(--text-secondary)] mb-2">Internal Notes</p>
               <Textarea
                 value={noteText || selectedConv.internalNotes}
                 onChange={e => setNoteText(e.target.value)}
@@ -332,8 +332,8 @@ export default function WhatsAppWorkspace() {
       ) : (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <MessageSquare className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400 text-sm">Select a conversation</p>
+            <MessageSquare className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3" />
+            <p className="text-[var(--text-secondary)] text-sm">Select a conversation</p>
           </div>
         </div>
       )}
@@ -351,8 +351,8 @@ function MessageBubble({ message }: { message: Message }) {
       <div className={`max-w-[75%] space-y-1`}>
         <div className={`px-3 py-2 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
           isOutbound
-            ? isAI ? 'bg-blue-600/80 text-white rounded-tr-none' : 'bg-emerald-700/80 text-white rounded-tr-none'
-            : 'bg-[#1E1E2E] text-slate-200 rounded-tl-none'
+            ? isAI ? 'bg-[var(--accent)] text-white rounded-tr-none' : 'bg-[var(--success)] text-white rounded-tr-none'
+            : 'bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border)] rounded-tl-none'
         }`}>
           {message.content}
         </div>
@@ -363,9 +363,9 @@ function MessageBubble({ message }: { message: Message }) {
             </Badge>
           )}
           {message.intentLabel && (
-            <span className="text-xs text-slate-600">{message.intentLabel}</span>
+            <span className="text-xs text-[var(--text-muted)]">{message.intentLabel}</span>
           )}
-          <span className="text-xs text-slate-600">{formatDistanceToNow(message.timestamp)}</span>
+          <span className="text-xs text-[var(--text-muted)]">{formatDistanceToNow(message.timestamp)}</span>
         </div>
       </div>
     </div>
@@ -388,7 +388,7 @@ function StatusDot({ status }: { status: string }) {
   return (
     <div className="flex items-center gap-1">
       <div className={`w-1.5 h-1.5 rounded-full ${colors[status] || 'bg-slate-500'}`} />
-      <span className="text-xs text-slate-500">{labels[status] || status}</span>
+      <span className="text-xs text-[var(--text-muted)]">{labels[status] || status}</span>
     </div>
   );
 }
