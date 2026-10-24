@@ -14,7 +14,7 @@ import { ToastContainer } from './components/ui';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Scale100x">
       <AppShell>
         <Routes>
           <Route path="/" element={<CommandCenter />} />

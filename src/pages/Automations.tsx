@@ -1,16 +1,16 @@
 import React from 'react';
-import { Play, Pause, Zap, ChevronRight, Users, Clock, Activity, AlertCircle, CheckCircle, UserCheck } from 'lucide-react';
+import { Play, Pause, Zap, ChevronRight, Activity, AlertCircle, CheckCircle, UserCheck } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { Button, Card, Badge } from '../components/ui';
 import { showToast } from '../components/ui';
-import { formatDateTime, formatDistanceToNow } from '../lib/utils';
+import { formatDistanceToNow } from '../lib/utils';
 import type { WorkflowStep } from '../types';
 
 const STEP_TYPE_COLORS = {
-  trigger: 'border-blue-600 bg-blue-900/20',
+  trigger: 'border-blue-400 bg-[var(--accent-subtle)]',
   action: 'border-[var(--border)] bg-[var(--bg-app)]',
-  condition: 'border-yellow-600 bg-yellow-900/10',
-  human_checkpoint: 'border-orange-600 bg-orange-900/10',
+  condition: 'border-amber-400 bg-[var(--warning-bg)]',
+  human_checkpoint: 'border-orange-400 bg-orange-50',
 };
 
 const STEP_TYPE_LABELS = {
@@ -41,7 +41,7 @@ export default function Automations() {
     }
   }
 
-  if (!workflow) return <div className="p-6 text-[var(--text-secondary)]">No workflows configured</div>;
+  if (!workflow) return <div className="p-6 text-[var(--text-muted)]">No workflows configured</div>;
 
   return (
     <div className="p-6 space-y-6">
@@ -66,7 +66,6 @@ export default function Automations() {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card className="p-4 text-center">
           <p className="text-2xl font-bold font-mono text-[var(--accent)]">{workflow.runsCount}</p>
@@ -83,14 +82,13 @@ export default function Automations() {
         </Card>
         <Card className="p-4 text-center">
           <div className="flex items-center justify-center gap-1">
-            <div className={`w-2 h-2 rounded-full ${workflow.status === 'running' ? 'bg-emerald-400 animate-pulse' : 'bg-yellow-400'}`} />
+            <div className={`w-2 h-2 rounded-full ${workflow.status === 'running' ? 'bg-[var(--success)]' : 'bg-[var(--warning)]'}`} />
             <p className="text-sm font-bold text-[var(--text-primary)] capitalize">{workflow.status}</p>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-1">Workflow Status</p>
         </Card>
       </div>
 
-      {/* Workflow Visualization */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-sm font-semibold text-[var(--text-primary)]">{workflow.name}</h2>
@@ -105,7 +103,7 @@ export default function Automations() {
                   <Badge variant={step.type === 'human_checkpoint' ? 'orange' : step.type === 'condition' ? 'yellow' : step.type === 'trigger' ? 'blue' : 'gray'}>
                     {STEP_TYPE_LABELS[step.type]}
                   </Badge>
-                  {step.type === 'human_checkpoint' && <UserCheck className="w-3.5 h-3.5 text-orange-400" />}
+                  {step.type === 'human_checkpoint' && <UserCheck className="w-3.5 h-3.5 text-orange-500" />}
                 </div>
                 <p className="text-xs font-semibold text-[var(--text-primary)] mb-1">{step.name}</p>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-2">{step.description}</p>
@@ -125,7 +123,6 @@ export default function Automations() {
           ))}
         </div>
 
-        {/* Integration Status */}
         <div className="mt-4 pt-4 border-t border-[var(--border)]">
           <p className="text-xs font-medium text-[var(--text-secondary)] mb-2">Integration Status</p>
           <div className="flex flex-wrap gap-2">
@@ -146,7 +143,6 @@ export default function Automations() {
         </div>
       </Card>
 
-      {/* Execution Log */}
       <Card className="p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-[var(--text-primary)]">Execution Log</h2>
@@ -166,7 +162,7 @@ export default function Automations() {
             </thead>
             <tbody>
               {runs.map(run => (
-                <tr key={run.id} className="border-b border-[var(--border)]/50 hover:bg-[var(--bg-hover)]/30">
+                <tr key={run.id} className="border-b border-[var(--border)] hover:bg-[var(--bg-hover)]">
                   <td className="py-2 px-3 text-[var(--text-muted)] font-mono">{run.id.slice(0, 8)}</td>
                   <td className="py-2 px-3 text-[var(--text-secondary)]">{run.leadName || 'Sample'}</td>
                   <td className="py-2 px-3 text-[var(--text-secondary)]">{run.triggeredBy}</td>
@@ -185,7 +181,6 @@ export default function Automations() {
         </div>
       </Card>
 
-      {/* Time Saved Detail */}
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Time Savings Calculation</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">

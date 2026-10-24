@@ -25,20 +25,17 @@ export default function CommandCenter() {
   const activeAgents = data.agents.filter(a => a.status === 'active').length;
   const humanQueue = data.conversations.filter(c => c.status === 'Human Active' || c.status === 'Escalated').length;
 
-  // Funnel data
   const stages = ['New', 'Contacted', 'Qualified', 'Consultation', 'Proposal', 'Negotiation', 'Won'];
   const funnelData = stages.map(stage => ({
     stage,
     count: data.leads.filter(l => l.stage === stage).length,
   }));
 
-  // Readiness donut
   const readinessData = [
     { name: 'Score 78', value: 78 },
     { name: 'Remaining', value: 22 },
   ];
 
-  // Automation performance
   const autoData = [
     { name: 'Meta Ads', handled: 34, escalated: 3 },
     { name: 'WhatsApp AI', handled: 47, escalated: 5 },
@@ -55,19 +52,17 @@ export default function CommandCenter() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-[var(--text-primary)]">Command Center</h1>
           <p className="text-sm text-[var(--text-muted)] mt-0.5">FreshBrew QSR — Franchise Operations Overview</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="green"><span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1" />Live</Badge>
+          <Badge variant="green"><span className="w-1.5 h-1.5 bg-[var(--success)] rounded-full mr-1" />Live</Badge>
           <Badge variant="yellow">DEMO DATA</Badge>
         </div>
       </div>
 
-      {/* KPI Row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard label="Brands" value={data.brands.length} icon={<Coffee className="w-4 h-4" />} color="blue" onClick={() => navigate('/onboarding')} />
         <StatCard label="Total Leads" value={totalLeads} icon={<Users className="w-4 h-4" />} color="blue" trend={12} onClick={() => navigate('/crm')} />
@@ -77,37 +72,34 @@ export default function CommandCenter() {
         <StatCard label="Human Queue" value={humanQueue} sub="needs review" icon={<AlertTriangle className="w-4 h-4" />} color={humanQueue > 0 ? 'yellow' : 'green'} onClick={() => navigate('/agents/whatsapp')} />
       </div>
 
-      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Lead Funnel */}
         <Card className="lg:col-span-2 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[var(--text-primary)]">Lead Funnel</h2>
-            <button onClick={() => navigate('/crm')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View CRM →</button>
+            <button onClick={() => navigate('/crm')} className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer">View CRM →</button>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={funnelData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
               <XAxis dataKey="stage" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
               <Tooltip
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 12 }}
+                contentStyle={{ backgroundColor: '#fff', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                 labelStyle={{ color: 'var(--text-primary)' }}
                 itemStyle={{ color: 'var(--text-secondary)' }}
               />
-              <Bar dataKey="count" fill="#2563EB" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="count" fill="#315EFB" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
 
-        {/* Readiness Score */}
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Brand Readiness</h2>
           <div className="flex flex-col items-center">
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie data={readinessData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
-                  <Cell fill="#2563EB" />
-                  <Cell fill="var(--border)" />
+                  <Cell fill="#315EFB" />
+                  <Cell fill="#E5E8ED" />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
@@ -120,13 +112,11 @@ export default function CommandCenter() {
         </Card>
       </div>
 
-      {/* Bottom Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Recent Conversations */}
         <Card className="lg:col-span-2 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[var(--text-primary)]">Recent Conversations</h2>
-            <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View all →</button>
+            <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer">View all →</button>
           </div>
           <div className="space-y-2">
             {recentConvs.map(conv => (
@@ -135,7 +125,7 @@ export default function CommandCenter() {
                 onClick={() => navigate('/agents/whatsapp')}
                 className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[var(--bg-hover)] cursor-pointer transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)] flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-subtle)] flex items-center justify-center text-xs font-bold text-[var(--accent)] flex-shrink-0">
                   {conv.leadName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -143,7 +133,7 @@ export default function CommandCenter() {
                     <span className="text-sm font-medium text-[var(--text-primary)]">{conv.leadName}</span>
                     <StatusBadge status={conv.status} />
                     {conv.unreadCount > 0 && (
-                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-blue-600 text-[var(--text-primary)] text-xs rounded-full">{conv.unreadCount}</span>
+                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-[var(--accent)] text-white text-xs rounded-full">{conv.unreadCount}</span>
                     )}
                   </div>
                   <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">{conv.lastMessage}</p>
@@ -154,13 +144,12 @@ export default function CommandCenter() {
           </div>
         </Card>
 
-        {/* Activity Feed */}
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Recent Activity</h2>
           <div className="space-y-3">
             {recentEvents.map(event => (
               <div key={event.id} className="flex items-start gap-2.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-1.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{event.description}</p>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5">{formatDistanceToNow(event.timestamp)}</p>
@@ -171,18 +160,17 @@ export default function CommandCenter() {
         </Card>
       </div>
 
-      {/* Automation Performance */}
       <Card className="p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-[var(--text-primary)]">Automation Performance</h2>
-          <button onClick={() => navigate('/automations')} className="text-xs text-[var(--accent)] hover:text-[var(--accent)] cursor-pointer">View details →</button>
+          <button onClick={() => navigate('/automations')} className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer">View details →</button>
         </div>
         <ResponsiveContainer width="100%" height={120}>
           <BarChart data={autoData} layout="vertical" margin={{ top: 0, right: 20, left: 60, bottom: 0 }}>
             <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
             <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E8ED', borderRadius: 8, fontSize: 12 }} />
-            <Bar dataKey="handled" fill="#2563EB" radius={[0, 4, 4, 0]} name="AI Handled" />
+            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }} />
+            <Bar dataKey="handled" fill="#315EFB" radius={[0, 4, 4, 0]} name="AI Handled" />
             <Bar dataKey="escalated" fill="#F59E0B" radius={[0, 4, 4, 0]} name="Escalated" />
           </BarChart>
         </ResponsiveContainer>
