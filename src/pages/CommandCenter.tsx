@@ -1,0 +1,221 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
+} from 'recharts';
+import {
+  Users, TrendingUp, MessageSquare, Bot, UserCheck, AlertTriangle,
+  Activity, Coffee, Zap, Clock, Target
+} from 'lucide-react';
+import { useStore } from '../store/useStore';
+import { StatCard, Card, Badge, ScoreBadge } from '../components/ui';
+import { formatDistanceToNow } from '../lib/utils';
+
+const COLORS = ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+
+export default function CommandCenter() {
+  const { data } = useStore();
+  const navigate = useNavigate();
+
+  const totalLeads = data.leads.length;
+  const highIntentLeads = data.leads.filter(l => l.intentScore >= 75).length;
+  const wonLeads = data.leads.filter(l => l.stage === 'Won').length;
+  const conversionRate = totalLeads > 0 ? Math.round((wonLeads / totalLeads) * 100) : 0;
+  const activeAgents = data.agents.filter(a => a.status === 'active').length;
+  const humanQueue = data.conversations.filter(c => c.status === 'Human Active' || c.status === 'Escalated').length;
+
+  // Funnel data
+  const stages = ['New', 'Contacted', 'Qualified', 'Consultation', 'Proposal', 'Negotiation', 'Won'];
+  const funnelData = stages.map(stage => ({
+    stage,
+    count: data.leads.filter(l => l.stage === stage).length,
+  }));
+
+  // Readiness donut
+  const readinessData = [
+    { name: 'Score 78', value: 78 },
+    { name: 'Remaining', value: 22 },
+  ];
+
+  // Automation performance
+  const autoData = [
+    { name: 'Meta Ads', handled: 34, escalated: 3 },
+    { name: 'WhatsApp AI', handled: 47, escalated: 5 },
+    { name: 'Email', handled: 28, escalated: 1 },
+  ];
+
+  const recentConvs = [...data.conversations]
+    .sort((a, b) => new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime())
+    .slice(0, 5);
+
+  const recentEvents = [...data.events]
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 8);
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-100">Command Center</h1>
+          <p className="text-sm text-slate-500 mt-0.5">FreshBrew QSR — Franchise Operations Overview</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="green"><span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1" />Live</Badge>
+          <Badge variant="yellow">DEMO DATA</Badge>
+        </div>
+      </div>
+
+      {/* KPI Row */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <StatCard label="Brands" value={data.brands.length} icon={<Coffee className="w-4 h-4" />} color="blue" onClick={() => navigate('/onboarding')} />
+        <StatCard label="Total Leads" value={totalLeads} icon={<Users className="w-4 h-4" />} color="blue" trend={12} onClick={() => navigate('/crm')} />
+        <StatCard label="High Intent" value={highIntentLeads} sub="Score ≥75" icon={<Target className="w-4 h-4" />} color="green" onClick={() => navigate('/crm')} />
+        <StatCard label="Conversion" value={`${conversionRate}%`} icon={<TrendingUp className="w-4 h-4" />} color="purple" onClick={() => navigate('/crm')} />
+        <StatCard label="Active AI Agents" value={activeAgents} icon={<Bot className="w-4 h-4" />} color="blue" onClick={() => navigate('/agents')} />
+        <StatCard label="Human Queue" value={humanQueue} sub="needs review" icon={<AlertTriangle className="w-4 h-4" />} color={humanQueue > 0 ? 'yellow' : 'green'} onClick={() => navigate('/agents/whatsapp')} />
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Lead Funnel */}
+        <Card className="lg:col-span-2 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-slate-200">Lead Funnel</h2>
+            <button onClick={() => navigate('/crm')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View CRM →</button>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={funnelData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+              <XAxis dataKey="stage" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 12 }}
+                labelStyle={{ color: '#F8FAFC' }}
+                itemStyle={{ color: '#94A3B8' }}
+              />
+              <Bar dataKey="count" fill="#2563EB" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </Card>
+
+        {/* Readiness Score */}
+        <Card className="p-5">
+          <h2 className="text-sm font-semibold text-slate-200 mb-4">Brand Readiness</h2>
+          <div className="flex flex-col items-center">
+            <ResponsiveContainer width="100%" height={160}>
+              <PieChart>
+                <Pie data={readinessData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
+                  <Cell fill="#2563EB" />
+                  <Cell fill="#1E1E2E" />
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="text-center -mt-4">
+              <p className="text-3xl font-bold text-slate-100 font-mono">78</p>
+              <p className="text-xs text-slate-500">AI Readiness Score</p>
+              <Badge variant="green" className="mt-2">AMBER → GREEN</Badge>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Bottom Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Recent Conversations */}
+        <Card className="lg:col-span-2 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-slate-200">Recent Conversations</h2>
+            <button onClick={() => navigate('/agents/whatsapp')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View all →</button>
+          </div>
+          <div className="space-y-2">
+            {recentConvs.map(conv => (
+              <div
+                key={conv.id}
+                onClick={() => navigate('/agents/whatsapp')}
+                className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[#1E1E2E] cursor-pointer transition-colors"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                  {conv.leadName[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-slate-200">{conv.leadName}</span>
+                    <StatusBadge status={conv.status} />
+                    {conv.unreadCount > 0 && (
+                      <span className="ml-auto w-4 h-4 flex items-center justify-center bg-blue-600 text-white text-xs rounded-full">{conv.unreadCount}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                </div>
+                <span className="text-xs text-slate-600 flex-shrink-0">{formatDistanceToNow(conv.lastMessageAt)}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Activity Feed */}
+        <Card className="p-5">
+          <h2 className="text-sm font-semibold text-slate-200 mb-4">Recent Activity</h2>
+          <div className="space-y-3">
+            {recentEvents.map(event => (
+              <div key={event.id} className="flex items-start gap-2.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-slate-300 leading-relaxed">{event.description}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">{formatDistanceToNow(event.timestamp)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      {/* Automation Performance */}
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-slate-200">Automation Performance</h2>
+          <button onClick={() => navigate('/automations')} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">View details →</button>
+        </div>
+        <ResponsiveContainer width="100%" height={120}>
+          <BarChart data={autoData} layout="vertical" margin={{ top: 0, right: 20, left: 60, bottom: 0 }}>
+            <XAxis type="number" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
+            <Tooltip contentStyle={{ backgroundColor: '#111118', border: '1px solid #1E1E2E', borderRadius: 8, fontSize: 12 }} />
+            <Bar dataKey="handled" fill="#2563EB" radius={[0, 4, 4, 0]} name="AI Handled" />
+            <Bar dataKey="escalated" fill="#F59E0B" radius={[0, 4, 4, 0]} name="Escalated" />
+          </BarChart>
+        </ResponsiveContainer>
+        <div className="flex gap-6 mt-3 pt-3 border-t border-[#1E1E2E]">
+          <div className="text-center">
+            <p className="text-xl font-bold text-slate-100 font-mono">45m</p>
+            <p className="text-xs text-slate-500">Avg time saved/lead</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-bold text-slate-100 font-mono">109</p>
+            <p className="text-xs text-slate-500">Conversations handled</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-bold text-slate-100 font-mono">82%</p>
+            <p className="text-xs text-slate-500">AI resolution rate</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-bold text-blue-400 font-mono">~81h</p>
+            <p className="text-xs text-slate-500">Total hours saved</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, { label: string; variant: 'blue' | 'yellow' | 'red' | 'green' | 'gray' }> = {
+    'AI Active': { label: 'AI', variant: 'blue' },
+    'Human Active': { label: 'Human', variant: 'yellow' },
+    'Escalated': { label: 'Escalated', variant: 'red' },
+    'Resolved': { label: 'Resolved', variant: 'green' },
+  };
+  const m = map[status] || { label: status, variant: 'gray' };
+  return <Badge variant={m.variant}>{m.label}</Badge>;
+}
